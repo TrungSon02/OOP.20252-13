@@ -7,6 +7,7 @@ public class Board {
 
     public boolean checkEmpty(){
         //TODO 3: check if the 5 squares of each player is empty
+        
     }
 
     public boolean checkEnding(){
