@@ -15,8 +15,13 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
         Scene scene = new Scene(root, Color.LIGHTBLUE);
+        scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
 
-        stage.setScene(scene);;;;
+        Image icon = new Image("image/logo.png");
+        stage.getIcons().add(icon);
+        stage.setFullScreen(true);
+
+        stage.setScene(scene);
         stage.show();
     }
 

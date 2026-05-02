@@ -1,0 +1,36 @@
+.menu-background {
+    -fx-background-image: url("/image/menu_background.png");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+}
+
+.button {
+    -fx-background-color: #FCFCFD;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-border-width: 0;
+    -fx-text-fill: #36395A;
+    -fx-font-family: "JetBrains Mono";
+    -fx-font-size: 18px;
+    -fx-padding: 0 16 0 16;
+    -fx-pref-height: 48px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(45,35,66,0.4), 4, 0, 0, 2);
+}
+
+.button:focused {
+    -fx-effect: dropshadow(gaussian, rgba(45,35,66,0.4), 4, 0, 0, 2);
+    -fx-border-color: #D6D6E7;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 4;
+}
+
+.button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(45,35,66,0.4), 8, 0, 0, 4);
+    -fx-translate-y: -2;
+}
+
+.button:pressed {
+    -fx-effect: innershadow(gaussian, #D6D6E7, 7, 0, 0, 3);
+    -fx-translate-y: 2;
+}
