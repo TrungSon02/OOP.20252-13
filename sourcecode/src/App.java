@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
+        loadFont();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
         Scene scene = new Scene(root, Color.LIGHTBLUE);
         scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
@@ -23,6 +24,11 @@ public class App extends Application {
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void loadFont(){
+        Font.loadFont(getClass().getResourceAsStream("/fonts/Xirod.otf"), 36);
+        //Font.getFamilies().forEach(System.out::println);
     }
 
     public static void main(String[] args) {
