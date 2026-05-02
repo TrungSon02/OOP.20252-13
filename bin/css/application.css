@@ -27,3 +27,10 @@
     -fx-opacity: 0.7;
     -fx-translate-y: 2;
 }
+
+.game-title {
+    -fx-font-family: "HN Artukge Script";
+    -fx-font-size: 180px;
+    -fx-text-fill: #631A11;
+    -fx-effect: dropshadow(gaussian, #FFD700, 8, 0.5, 0, 0);
+}
