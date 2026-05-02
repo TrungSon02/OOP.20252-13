@@ -1,3 +1,4 @@
+package Model;
 public class Board {
     //TODO 1: Add attributes
 

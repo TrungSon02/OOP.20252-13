@@ -1,3 +1,4 @@
+package Model;
 public class Game {
     //TODO 1: Create all attributes
 
