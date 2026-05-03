@@ -14,11 +14,11 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         loadFont();
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/main_game.fxml"));
         Scene scene = new Scene(root, Color.LIGHTBLUE);
         scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
 
-        Image icon = new Image("image/logo.png");
+        Image icon = new Image("image/layout/logo.png");
         stage.getIcons().add(icon);
         stage.setFullScreen(true);
 

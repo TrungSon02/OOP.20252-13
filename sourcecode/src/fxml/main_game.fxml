@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Rectangle?>
+
+<BorderPane styleClass="game-background" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Controller">
+   <top>
+      <HBox alignment="CENTER" style="-fx-padding: 0 0 0 30;">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefWidth="200" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button styleClass="exit-small-button" />
+                  <Button styleClass="music-button" />
+                  <Button styleClass="audio-button" />
+               </children>
+            </HBox>
+            <VBox alignment="CENTER">
+               <children>
+                  <Label styleClass="name-label" text="Player 1" />
+                  <ImageView fitHeight="80.0" fitWidth="80.0" preserveRatio="true" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefWidth="200" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label styleClass="score-label" text="Score: 0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <HBox alignment="CENTER">
+         <children>
+            <Arc length="180.0" radiusX="150.0" radiusY="150.0" startAngle="90.0" strokeType="INSIDE" styleClass="game-arc" type="ROUND" />
+            <VBox alignment="CENTER" spacing="0">
+               <children>
+                  <HBox alignment="CENTER" spacing="0">
+                     <children>
+                        <Rectangle height="150.0" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                        <Rectangle height="150.0" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                        <Rectangle height="150.0" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                        <Rectangle height="150.0" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                        <Rectangle height="150.0" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="0">
+                     <children>
+                        <Rectangle height="150.0" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                        <Rectangle height="150.0" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                        <Rectangle height="150.0" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                        <Rectangle height="150.0" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                        <Rectangle height="150.0" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <Arc length="180.0" radiusX="150.0" radiusY="150.0" startAngle="270.0" strokeType="INSIDE" styleClass="game-arc" type="ROUND" />
+         </children>
+      </HBox>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER">
+         <children>
+            <VBox alignment="CENTER_LEFT" prefWidth="200" HBox.hgrow="ALWAYS" />
+            <VBox alignment="CENTER">
+               <children>
+                  <StackPane styleClass="avatar-frame">
+                     <ImageView fx:id="playerOneAvatar" fitHeight="80.0" fitWidth="80.0" preserveRatio="true" />
+                  </StackPane>
+                  <Label styleClass="name-label" text="Player 2" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefWidth="200" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label styleClass="score-label" text="Score: 0" />
+               </children></VBox>
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>
