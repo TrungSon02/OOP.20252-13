@@ -6,13 +6,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="menu-background" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="menu-background" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Controller">
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="50">
          <children>
-            <Button styleClass="menu-button" mnemonicParsing="false" text="Play" />
-            <Button styleClass="menu-button" mnemonicParsing="false" text="Instruction" />
-            <Button styleClass="menu-button" mnemonicParsing="false" text="Exit" />
+            <Button fx:id="playButton" mnemonicParsing="false" styleClass="menu-button" text="Play" />
+            <Button mnemonicParsing="false" styleClass="menu-button" text="Instruction" />
+            <Button mnemonicParsing="false" styleClass="menu-button" text="Exit" />
          </children>
          <StackPane.margin>
             <Insets top="200.0" />
