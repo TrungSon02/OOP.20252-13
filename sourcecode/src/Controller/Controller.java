@@ -30,14 +30,6 @@ public class Controller {
     @FXML
     private Button exitButton;
 
-    @FXML
-    private ImageView playerOneAvatar;
-
-    @FXML
-    public void initialize() {
-        playerOneAvatar.setImage(new Image("/image/avatar/Pattrick_2.png"));
-    }
-
     public void playGame(){
         //PHUC:
         //TODO: Load main_game.fxml scene. NOTE: remember to add application.css (same command as in App.java)
@@ -54,7 +46,8 @@ public class Controller {
 
     public void showInstruction(){
         //PHUC
-        //TODO: Load instruction.fxml scene. NOTE: remember to add application.css (same command as in App.java)
+        //TODO 1: Load instruction.fxml scene. NOTE: remember to add application.css (same command as in App.java)
+        //TODO 2: Change the instruction text 
     }
 
     public void showResult(){
