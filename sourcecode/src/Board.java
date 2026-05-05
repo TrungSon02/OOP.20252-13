@@ -97,7 +97,11 @@ public class Board {
         this.p2Pawn = p2Pawn;
     }
 
+
     public void setPawn(int player, int pawn){
+        if (player != 1 && player != 2) {
+            throw new IllegalArgumentException("Player must be 1 or 2");
+        }
         if (player == 1){
             setP1Pawn(pawn);
         } else {
@@ -113,7 +117,14 @@ public class Board {
         this.p2King = p2King;
     }
 
+
     public void setKing(int player, int king){
+        if (player != 1 && player != 2) {
+            throw new IllegalArgumentException("Player must be 1 or 2");
+        }
+        if (king < 0) {
+            throw new IllegalArgumentException("King count cannot be negative");
+        }
         if (player == 1){
             setP1King(king);
         } else {
@@ -137,6 +148,7 @@ public class Board {
         return COUNTER_CLOCKWISE;
     }
 
+
     public List<Integer> moveGem(int startPosition, int player, int direction) {
         // TODO 2 implement moveGem: Create a list that stores all move. After finish moving, return that list
         List<Integer> moveSequence = new ArrayList<Integer>();
@@ -144,19 +156,23 @@ public class Board {
         boolean isP2 = (player == 2);
 
         if (startPosition < 0 || startPosition >= TOTAL_SMALL_SQUARES + 2) {
-            return moveSequence; // Invalid position
+            throw new IllegalArgumentException("Invalid start position");
         }
         if (isP1 && startPosition > 5){
-            return moveSequence;
+            throw new IllegalArgumentException("Invalid start position");
         }
         if (isP2 && startPosition < 7){
-            return moveSequence;
-        }
-        if (!isP1 && !isP2){
-            return moveSequence;
+            throw new IllegalArgumentException("Invalid start position");
         }
         if (smallSquares[startPosition] == 0){
-            return moveSequence;
+            throw new IllegalArgumentException("Invalid start position");
+        }
+        if (!isP1 && !isP2){
+            throw new IllegalArgumentException("Player must be 1 or 2");
+        }
+        if (direction != 1 || direction != -1){
+            throw new IllegalArgumentException("direction must be 1 (clockwise) or -1 (counter-clockwise)");
+
         }
 
         int pawnsToMove = smallSquares[startPosition];
@@ -253,8 +269,8 @@ public class Board {
     }
     
     public boolean fillGem(int player) {
-        if (player == 0){
-            return false;
+        if (player != 1 && player != 2) {
+            throw new IllegalArgumentException("Player must be 1 or 2");
         }
         int startIndex, playerPawn, opponentPawn;
         if (player == 1) {
