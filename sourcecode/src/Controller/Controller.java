@@ -18,13 +18,7 @@ public class Controller {
     private Scene scene;
     private Parent root;
 
-    @FXML
-    private ImageView playerOneAvatar;
-
-    @FXML
-    public void initialize() {
-        playerOneAvatar.setImage(new Image("/image/avatar/Pattrick_2.png"));
-    }
+  
 
     
 

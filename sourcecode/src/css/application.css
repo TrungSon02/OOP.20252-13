@@ -35,28 +35,6 @@
     -fx-cursor: hand;
 }
 
-.green-play-again-button {
-    -fx-background-color: transparent;
-    -fx-background-image: url("/image/menu_icon/green_play_again.png");
-    -fx-background-size: 100% 100%;
-    -fx-background-repeat: no-repeat;
-    -fx-border-width: 0;
-    -fx-pref-height: 150px;
-    -fx-pref-width: 150px;
-    -fx-cursor: hand;
-}
-
-.green-home-button {
-    -fx-background-color: transparent;
-    -fx-background-image: url("/image/menu_icon/green_home.png");
-    -fx-background-size: 100% 100%;
-    -fx-background-repeat: no-repeat;
-    -fx-border-width: 0;
-    -fx-pref-height: 150px;
-    -fx-pref-width: 150px;
-    -fx-cursor: hand;
-}
-
 .audio-button {
     -fx-background-color: transparent;
     -fx-background-image: url("/image/menu_icon/audio.png");
@@ -76,6 +54,28 @@
     -fx-border-width: 0;
     -fx-pref-height: 50px;
     -fx-pref-width: 50px;
+    -fx-cursor: hand;
+}
+
+.green-play-again-button {
+    -fx-background-color: transparent;
+    -fx-background-image: url("/image/menu_icon/green_play_again.png");
+    -fx-background-size: 100% 100%;
+    -fx-background-repeat: no-repeat;
+    -fx-border-width: 0;
+    -fx-pref-height: 150px;
+    -fx-pref-width: 150px;
+    -fx-cursor: hand;
+}
+
+.green-home-button {
+    -fx-background-color: transparent;
+    -fx-background-image: url("/image/menu_icon/green_home.png");
+    -fx-background-size: 100% 100%;
+    -fx-background-repeat: no-repeat;
+    -fx-border-width: 0;
+    -fx-pref-height: 150px;
+    -fx-pref-width: 150px;
     -fx-cursor: hand;
 }
 
