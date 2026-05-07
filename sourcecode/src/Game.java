@@ -14,10 +14,31 @@ public class Game {
     }
 
     // Logic to calculate and add score after a move ends
-    public int handleCapture(){
+    public int handleCapture(int stopIndex, int direction){
         int totalCaptured = 0;
-        // TODO: Call board.captureGems(stopIndex) to get captured gems
-        // Then add totalCaptured to players[currentPlayer].addScore()
+        int currentIndex = stopIndex;
+
+        while(true){
+            int emptySquareIndex = (currentIndex + direction + 12) % 12;
+            int capturedSquareIndex = (currentIndex + direction + 12) % 12;
+
+            int gemsInEmptySquare = board.getGems(emptySquareIndex);
+            int gemsInCapturedSquare = board.getGems(capturedSquareIndex);
+
+            if (gemsInEmptySquare == 0 && gemsInCapturedSquare > 0){
+                int capturedGems = board.takeAllGems(capturedSquareIndex);
+                totalCaptured += capturedGems;
+                System.out.println("Player " + currentPlayer + " captured" + capturedGems + " gems in square " + capturedSquareIndex);
+                currentIndex = capturedSquareIndex;
+            }
+
+            else break;
+        }
+
+        if (totalCaptured > 0){
+            players[currentPlayer].addScore(totalCaptured);
+        }
+        
         return totalCaptured;
     }
 
