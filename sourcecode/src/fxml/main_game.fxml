@@ -14,7 +14,7 @@
    <top>
       <HBox alignment="CENTER">
          <children>
-            <HBox alignment="CENTER_LEFT" prefWidth="200" HBox.hgrow="ALWAYS" style="-fx-padding: 0 0 0 30;">
+            <HBox alignment="CENTER_LEFT" prefWidth="200" style="-fx-padding: 0 0 0 30;" HBox.hgrow="ALWAYS">
                <children>
                   <Button styleClass="exit-small-button" />
                   <Button styleClass="music-button" />
@@ -24,7 +24,7 @@
             <VBox alignment="CENTER">
                <children>
                   <Label styleClass="name-label" text="Player 1" />
-                  <StackPane styleClass="avatar-frame" maxWidth="120.0">
+                  <StackPane maxWidth="120.0" styleClass="avatar-frame">
                      <ImageView fitHeight="120.0" fitWidth="120.0" preserveRatio="false" />
                   </StackPane>
                </children>
@@ -73,7 +73,7 @@
             <VBox alignment="CENTER_LEFT" prefWidth="200" HBox.hgrow="ALWAYS" />
             <VBox alignment="CENTER">
                <children>
-                  <StackPane styleClass="avatar-frame" maxWidth="120.0">
+                  <StackPane maxWidth="120.0" styleClass="avatar-frame">
                      <ImageView fitHeight="120.0" fitWidth="120.0" preserveRatio="false" />
                   </StackPane>
                   <Label styleClass="name-label" text="Player 2" />
