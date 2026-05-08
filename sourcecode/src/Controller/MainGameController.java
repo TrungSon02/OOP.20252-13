@@ -1,16 +1,38 @@
 package Controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+
 
 public class MainGameController extends BaseController{
+
+    @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
+    @FXML private Label labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11;   
+    @FXML private Label scoreP1, scoreP2;
+
+    private Label[] allCells;
+
     @FXML
-    public void initialize(){
-        //PHUC
-        //TODO: 
-        //Set up initial gem count for each square (5 small gems each, 1 big gem in each Quan)
-        //Set up initial images for all squares
-        //Initialize scores to 0
-    }
+public void initialize() {
+    allCells = new Label[]{
+            labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
+            labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
+        };
+
+    for (int i = 1; i <= 11; i++) {
+            if (i == 6) continue; 
+            if (allCells[i] != null) {
+                allCells[i].setText("5");
+            }
+        }
+    
+    if (labelCell0 != null) labelCell0.setText("1");
+    if (labelCell6 != null) labelCell6.setText("1");
+
+    scoreP1.setText("0");
+    scoreP2.setText("0");
+}
 
     public void getInput(){
         //NAM
