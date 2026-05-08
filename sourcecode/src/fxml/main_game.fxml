@@ -16,7 +16,7 @@
          <children>
             <HBox alignment="CENTER_LEFT" prefWidth="200" style="-fx-padding: 0 0 0 30;" HBox.hgrow="ALWAYS">
                <children>
-                  <Button styleClass="exit-small-button" />
+                  <Button onAction="#goHome" styleClass="exit-small-button" />
                   <Button styleClass="music-button" />
                   <Button styleClass="audio-button" />
                </children>
