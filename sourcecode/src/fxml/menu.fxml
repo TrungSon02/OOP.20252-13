@@ -6,13 +6,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="menu-background" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Controller">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="menu-background" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MenuController">
    <children>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="50">
          <children>
-            <Button fx:id="playButton" mnemonicParsing="false" styleClass="menu-button" text="Play" />
-            <Button mnemonicParsing="false" styleClass="menu-button" text="Instruction" />
-            <Button mnemonicParsing="false" styleClass="menu-button" text="Exit" />
+            <Button fx:id="playButton" mnemonicParsing="false" onAction="#goPlay" styleClass="menu-button" text="Play" />
+            <Button fx:id="instructionButton" mnemonicParsing="false" onAction="#showInstruction" styleClass="menu-button" text="Instruction" />
+            <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exit" styleClass="menu-button" text="Exit" />
          </children>
          <StackPane.margin>
             <Insets top="200.0" />
