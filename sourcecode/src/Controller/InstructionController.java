@@ -15,8 +15,7 @@ public class InstructionController extends BaseController{
     }
 
     private void setInstructionContent() {
-    String content = "WELCOME TO Ô ĂN QUAN\n\n"
-        + "1. Setup: The board has 10 small cells (Rice fields) and 2 big cells (Castles).\n\n"
+    String content = "1. Setup: The board has 10 small cells (Rice fields) and 2 big cells (Castles).\n\n"
         + "2. Distribution: Pick gems from one of your cells and distribute them.\n\n"
         + "3. Capturing: Capture gems if your last gem falls before an empty cell.\n\n"
         + "4. Chain Moves: If the next cell is NOT empty, continue your turn.\n\n"
