@@ -14,25 +14,25 @@ public class MainGameController extends BaseController{
     private Label[] allCells;
 
     @FXML
-public void initialize() {
-    allCells = new Label[]{
-            labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
-            labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
-        };
+    public void initialize() {
+        allCells = new Label[]{
+                labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
+                labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
+            };
 
-    for (int i = 1; i <= 11; i++) {
-            if (i == 6) continue; 
-            if (allCells[i] != null) {
-                allCells[i].setText("5");
+        for (int i = 1; i <= 11; i++) {
+                if (i == 6) continue; 
+                if (allCells[i] != null) {
+                    allCells[i].setText("5");
+                }
             }
-        }
-    
-    if (labelCell0 != null) labelCell0.setText("1");
-    if (labelCell6 != null) labelCell6.setText("1");
+        
+        if (labelCell0 != null) labelCell0.setText("1");
+        if (labelCell6 != null) labelCell6.setText("1");
 
-    scoreP1.setText("0");
-    scoreP2.setText("0");
-}
+        scoreP1.setText("Score: 0");
+        scoreP2.setText("Score: 0");
+    }
 
     public void getInput(){
         //NAM

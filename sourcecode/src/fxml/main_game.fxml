@@ -42,8 +42,8 @@
          <children>
             <StackPane>
                <children>
-                  <Label fx:id="labelCell0" text="Label" />
                   <Arc length="180.0" radiusX="150.0" radiusY="150.0" startAngle="90.0" strokeType="INSIDE" styleClass="game-arc" type="ROUND" />
+                  <Label fx:id="labelCell0" text="Label" />
                </children>
             </StackPane>
             <VBox alignment="CENTER" spacing="0">
@@ -120,8 +120,8 @@
             </VBox>
             <StackPane>
                <children>
-                  <Label fx:id="labelCell6" text="Label" />
                   <Arc length="180.0" radiusX="150.0" radiusY="150.0" startAngle="270.0" strokeType="INSIDE" styleClass="game-arc" type="ROUND" />
+                  <Label fx:id="labelCell6" text="Label" />
                </children>
             </StackPane>
          </children>
