@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-
+//TODO (new): Add a clearSquare method to reset the value of a square to 0
 public class Board {
-    // TODO 1: Add attributes
+    // FIX: Remove all non constant attributes (and related parts) except the first one, change the logic to table[] (treating all squares the same)
     private int[] smallSquares;     // 10 small squares (5 per player) indices 1-5 for player1, 7-11 for player2, 0 for player 1, 6 for player 2
     private int p1Pawn;    // Player 1's captured pawn
     private int p2Pawn;    // Player 2's captured pawn
@@ -19,7 +19,7 @@ public class Board {
     private static final int CLOCKWISE = 1;
     private static final int COUNTER_CLOCKWISE = -1;
 
-
+    //FIX: Init all square (including big ones to 5)
     public Board() {
         smallSquares = new int[TOTAL_SMALL_SQUARES + 2];
         for (int i = 0; i < TOTAL_SMALL_SQUARES + 2; i++) {
@@ -39,7 +39,8 @@ public class Board {
     public int[] getSmallSquares() {
         return smallSquares;
     }
-    
+   
+    //FIX: Remove theses getter and setter
     public int getP1Pawn() {
         return p1Pawn;
     }
@@ -148,6 +149,10 @@ public class Board {
         return COUNTER_CLOCKWISE;
     }
 
+    //FIX1: Player must be 0 or 1*
+    //FIX2: Remove all the validation\
+    //FIX4: Remove all the capture and add score
+    //FIX3: moveSequence store pair (square_id, value_of_that_square)
 
     public List<Integer> moveGem(int startPosition, int player, int direction) {
         // TODO 2 implement moveGem: Create a list that stores all move. After finish moving, return that list
@@ -202,7 +207,7 @@ public class Board {
                 if (captured){
                     canMove = false;
                     continue;
-                }
+                }   
                 remainingPawns = smallSquares[nextSquare];
                 smallSquares[nextSquare] = 0;
                 currentPos = nextSquare;
@@ -233,7 +238,7 @@ public class Board {
         return moveSequence;
     }
 
-    
+    //FIX: Change the return value to match player 0 and player 1
     public int checkEmpty() {
         // TODO 3: check if the 5 squares of each player is empty
         // returns 0 if neither player's squares are empty, 1 if player 1's squares are empty and 2 if player 2's squares are empty
@@ -264,10 +269,13 @@ public class Board {
         }
     }
     
+    //FIX: change to check square 0 and 6
     public boolean checkEnding() {
         return this.getP1Square() == 0 && this.getP2Square() == 0;
     }
     
+    //FIX1: Remove validation
+    //FIX2: Remove the check if the player has 5 empty squares, instead use the input parameter as which player needs to be filled
     public boolean fillGem(int player) {
         if (player != 1 && player != 2) {
             throw new IllegalArgumentException("Player must be 1 or 2");
