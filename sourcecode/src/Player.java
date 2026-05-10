@@ -3,20 +3,21 @@ import java.util.Random;
 public class Player {
     private String name;    
     private double score;
+    //TODO: Add player's avatar
 
-    static String[] playerAdjectives = {"Hungry", "Brave", "Cunning", "Swift", "Almighty", "Wise", "Fierce", "Smart", "Quick"};
-    static String[] playerNoun = {"Hippo", "Giraffe", "Elephant", "Lion","Tiger", "Bear", "Wolf", "Fox", "Eagle", "Shark","Sloth","Turtle","Pattrick","Banana","Chongus",};
+    static final String[] PLAYER_ADJECTIVES = {"Hungry", "Brave", "Cunning", "Swift", "Almighty", "Wise", "Fierce", "Smart", "Quick"};
+    static final String[] PLAYER_NOUN = {"Hippo", "Giraffe", "Elephant", "Lion","Tiger", "Bear", "Wolf", "Fox", "Eagle", "Shark","Sloth","Turtle","Pattrick","Banana","Chongus",};
     
     private String generatePlayerNames(){
-        //FU AI
         Random random = new Random();
-        String tmp = playerAdjectives[random.nextInt(playerAdjectives.length)] + " " + playerNoun[random.nextInt(playerNoun.length)];
+        String tmp = PLAYER_ADJECTIVES[random.nextInt(PLAYER_ADJECTIVES.length)] + PLAYER_NOUN[random.nextInt(PLAYER_NOUN.length)];
         return tmp;
     }
  
     public Player() {
         this.name = generatePlayerNames();
         this.score = 0;
+        //TODO: Add player's avatar
     }
 
     public String getName() {
@@ -32,10 +33,8 @@ public class Player {
     }
 
 
-    public void addScore(int points){
-        if(points > 0){
-            this.score += points;
-        }
+    public void updateScore(int points){
+        this.score += points;
     }
 
 }
