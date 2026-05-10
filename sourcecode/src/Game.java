@@ -2,20 +2,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private int[] board;
+    private int[] board; //FIX: no need to create a new board logic. Use private Board board instead
     private Player[] players;
     private int currentPlayer;
     private boolean isFinished;
 
     public Game(Player player1, Player player2) {
-        this.players = new Player[]{player1, player2};
-        this.board = new int[12];
+        this.players = new Player[]{player1, player2}; 
+        this.board = new int[12]; //FIX: board = new Board() instead
         this.currentPlayer = 0;
         this.isFinished = false;
-        initBoard();
+        initBoard(); //FIX: Remove this 
     }
 
-    // Initialize board with 10 gems in big squares and 5 in small squares
+    // FIX: Remove this method. This belongs to Board class
     private void initBoard() {
         board[0] = 10;
         board[6] = 10;
@@ -23,7 +23,7 @@ public class Game {
         for (int i = 7; i <= 11; i++) board[i] = 5;
     }
 
-    // Handle picking up gems and sowing logic including chain moves
+    // FIX: Remove this method. This belongs to Board class
     public List<Integer> sowGems(int startIndex, int direction) {
         List<Integer> moveSequence = new ArrayList<>();
         int gemsInHand = board[startIndex];
@@ -54,7 +54,9 @@ public class Game {
         return moveSequence;
     }
 
-    // Capture gems logic after sowing ends
+    // FIX1: Replace all the board[id] to board.getBoard()[id]
+    // FIX2: Replace board[targetIdx] = 0, use a method clearSquare(id) in Board class instead
+    // FIX3: IMPORTANT: forgot to handle deadend case. (Case when empty index being the big Square 0 or 6)
     public int handleCapture(int stopIndex, int direction) {
         int totalCaptured = 0;
         int currentIndex = stopIndex;
@@ -65,7 +67,7 @@ public class Game {
 
             // Capture condition: one empty square followed by one with gems
             if (board[emptyIdx] == 0 && board[targetIdx] > 0) {
-                int capturedGems = board[targetIdx];
+                int capturedGems = board[targetIdx]; 
                 board[targetIdx] = 0;
                 totalCaptured += capturedGems;
                 currentIndex = targetIdx;
@@ -81,7 +83,7 @@ public class Game {
         return totalCaptured;
     }
 
-    // Refill side from score if all 5 squares are empty
+    // FIX: Remove this method
     public void replenishIfEmpty() {
         int start = (currentPlayer == 0) ? 1 : 7;
         boolean isEmpty = true;
@@ -111,6 +113,7 @@ public class Game {
         }
     }
 
+    //FIX: return the board instance instead
     public int[] getBoardState() {
         return this.board;
     }
@@ -123,6 +126,7 @@ public class Game {
         return this.isFinished;
     }
 
+    //FIX: Remove this, no point
     public Player getActivePlayerObject() {
         return this.players[this.currentPlayer];
     }
