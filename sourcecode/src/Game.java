@@ -56,7 +56,6 @@ public class Game {
 
     // FIX1: Replace all the board[id] to board.getBoard()[id]
     // FIX2: Replace board[targetIdx] = 0, use a method clearSquare(id) in Board class instead
-    // FIX3: IMPORTANT: forgot to handle deadend case. (Case when empty index being the big Square 0 or 6)
     public int handleCapture(int stopIndex, int direction) {
         int totalCaptured = 0;
         int currentIndex = stopIndex;
