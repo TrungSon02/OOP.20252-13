@@ -3,7 +3,7 @@ import java.util.Random;
 public class Player {
     private String name;    
     private double score;
-    //TODO: Add player's avatar
+    private String avatar;
 
     static final String[] PLAYER_ADJECTIVES = {"Hungry", "Brave", "Cunning", "Swift", "Almighty", "Wise", "Fierce", "Smart", "Quick"};
     static final String[] PLAYER_NOUN = {"Hippo", "Giraffe", "Elephant", "Lion","Tiger", "Bear", "Wolf", "Fox", "Eagle", "Shark","Sloth","Turtle","Pattrick","Banana","Chongus",};
@@ -17,11 +17,15 @@ public class Player {
     public Player() {
         this.name = generatePlayerNames();
         this.score = 0;
-        //TODO: Add player's avatar
+        this.avatar = "/image/avatar/Pattrick_" + (new Random().nextInt(9)+1) + ".jpg";
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 
     public double getScore() {
