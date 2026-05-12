@@ -45,7 +45,7 @@ public class Board {
     //FIX3: moveSequence store pair (square_id, value_of_that_square)
 
     public List<AbstractMap.SimpleEntry<Integer, Integer>> moveGem(int startPosition, int player, int direction) {
-        // TODO 2 implement moveGem: Create a list that stores all move. After finish moving, return that list
+        // use .getKey() to get the square number, use .getValue() to get the number of pawns in the square
         List<AbstractMap.SimpleEntry<Integer, Integer>> moveSequence = new ArrayList<>();
         boolean isP1 = (player == 0);
         boolean isP2 = (player == 1);

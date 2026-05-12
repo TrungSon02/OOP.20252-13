@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class TestBoard {
     public static void main(String args[]) {
         Board board = new Board();
@@ -6,8 +8,13 @@ public class TestBoard {
         board.printBoard();
         
         // Simulate a series of moves
-        board.moveGem(2, 1, Board.counterClockwise());
+        for (var i :board.moveGem(2, 1, Board.counterClockwise())){
+            System.out.print(i.getKey());
+            System.out.print(" ");
+            System.out.println(i.getValue());
+        }
         board.printBoard();
+        
 
         board.moveGem(9, 2, Board.counterClockwise());
         board.printBoard();
