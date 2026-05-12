@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.AbstractMap;
+import java.util.Arrays;
+
 
 //TODO (new): Add a clearSquare method to reset the value of a square to 0
 public class Board {
@@ -41,14 +44,14 @@ public class Board {
     //FIX4: Remove all the capture and add score
     //FIX3: moveSequence store pair (square_id, value_of_that_square)
 
-    public List<Pair<Integer, Integer>> moveGem(int startPosition, int player, int direction) {
+    public List<AbstractMap.SimpleEntry<Integer, Integer>> moveGem(int startPosition, int player, int direction) {
         // TODO 2 implement moveGem: Create a list that stores all move. After finish moving, return that list
-        List<Integer> moveSequence = new ArrayList<Integer>();
+        List<AbstractMap.SimpleEntry<Integer, Integer>> moveSequence = new ArrayList<>();
         boolean isP1 = (player == 0);
         boolean isP2 = (player == 1);
 
         int pawnsToMove = table[startPosition];
-        moveSequence.add(Pair.with(startPosition, table[startPosition]));
+        moveSequence.add(new AbstractMap.SimpleEntry<>(startPosition, table[startPosition]));
         table[startPosition] = 0;
         
         int currentPos = startPosition;
@@ -58,7 +61,7 @@ public class Board {
         while (remainingPawns > 0) {
             currentPos = Math.floorMod(currentPos + direction, TOTAL_SMALL_SQUARES + 2);
             table[currentPos]++;
-            moveSequence.add(Pair.with(currentPos, table[currentPos]));    
+            moveSequence.add(new AbstractMap.SimpleEntry<>(currentPos, table[currentPos]));    
             remainingPawns--;
         }
 
@@ -96,6 +99,14 @@ public class Board {
         }
     }
     
+    public boolean clearSquare(int square){
+        if (square < 0 || square > 11){
+            return false;
+        }
+        table[square] = 0;
+        return true;
+    }
+
     //FIX: change to check square 0 and 6
     public boolean checkEnding() {
         return this.table[0] == 0 && this.table[6] == 0;
@@ -121,8 +132,7 @@ public class Board {
     // for debugging
     public void printBoard() {
         System.out.println("=== Board State ===");
-        System.out.println("P1 King: " + p1King + ", P1 Pawn: " + p1Pawn);
-        System.out.println("P1 Home (index " + P1_HOME + "): " + this.getP1Square());
+        System.out.println("P1 Home (index " + P1_HOME + "): " + table[0]);
         System.out.print("P1 squares (1 to 5): ");
         for (int i = 1; i < P2_HOME; i++) {
             System.out.print(table[i] + " ");
@@ -133,8 +143,7 @@ public class Board {
             System.out.print(table[i] + " ");
         }
         System.out.println();
-        System.out.println("P2 Home (index " + P2_HOME + "): " + this.getP2Square());
-        System.out.println("P2 King: " + p2King + ", P2 Pawn: " + p2Pawn);
+        System.out.println("P2 Home (index " + P2_HOME + "): " + table[6]);
         System.out.println("==================");
     }
 }
