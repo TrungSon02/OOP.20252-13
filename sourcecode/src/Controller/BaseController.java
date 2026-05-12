@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
@@ -20,17 +21,17 @@ public class BaseController {
         //PHUC
         //TODO: Get a String input param (the path to a fxml file). Load the scene + Load the css (same command as in App.java)
         try{
-            
             root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
-
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
             scene = new Scene(root);
 
             String css = Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm();
             scene.getStylesheets().add(css);
 
+            stage.hide();
             stage.setScene(scene);
+            stage.setFullScreen(true);
+            stage.setFullScreenExitHint("");
             stage.show();
 
         } catch (IOException e){
