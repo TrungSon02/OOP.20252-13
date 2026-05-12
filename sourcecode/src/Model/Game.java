@@ -1,14 +1,62 @@
 package Model;
 public class Game {
-    //TODO 1: Create all attributes
+    private Board board;
+    private Player[] players;
+    private int currentPlayer;
+    private boolean isFinished;
 
-    public int handleCapture(){
-        //TODO 2: implement, return the total gem value captured
+    public Game(Player player1, Player player2) {
+        this.players = new Player[]{player1, player2}; 
+        this.board = new Board(); 
+        this.currentPlayer = 0;
+        this.isFinished = false;
     }
 
-    public void switchPLayer(){
-        //TODO 3: simply 1 - currentPlayer
+    public int handleCapture(int stopIndex, int direction) {
+        int totalCaptured = 0;
+        int currentIndex = stopIndex;
+        int[] table = board.getTable();
+
+        while (true) {
+            int emptyIdx = (currentIndex + direction + 12) % 12;
+            int targetIdx = (emptyIdx + direction + 12) % 12;
+
+            if (table[emptyIdx] == 0 && table[targetIdx] > 0) {
+                int capturedGems = table[targetIdx]; 
+                board.clearSquare(targetIdx); 
+                totalCaptured += capturedGems;
+                currentIndex = targetIdx;
+            } else {
+                break;
+            }
+        }
+
+        if (totalCaptured > 0) {
+            players[currentPlayer].addScore(totalCaptured);
+        }
+        
+        return totalCaptured;
     }
 
-    //TODO 4: implement all the get method
+    public void switchPlayer() {
+        this.currentPlayer = 1 - this.currentPlayer;
+    }
+
+    public void updateGameState() {
+        if (board.getTable()[0] == 0 && board.getTable()[6] == 0) {
+            this.isFinished = true;
+        }
+    }
+
+    public Board getBoardState() {
+        return this.board;
+    }
+
+    public int getCurrentPlayer() {
+        return this.currentPlayer;
+    }
+
+    public boolean isFinished() {
+        return this.isFinished;
+    }
 }
