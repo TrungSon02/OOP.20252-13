@@ -19,7 +19,6 @@ public class App extends Application {
         Image icon = new Image("image/layout/logo.png");
         stage.getIcons().add(icon);
         stage.setFullScreen(true);
-        stage.setFullScreenExitHint("");
 
         stage.setScene(scene);
         stage.show();
