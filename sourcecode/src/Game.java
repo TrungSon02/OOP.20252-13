@@ -31,7 +31,7 @@ public class Game {
         }
 
         if (totalCaptured > 0) {
-            players[currentPlayer].addScore(totalCaptured);
+            players[currentPlayer].updateScore(totalCaptured);
         }
         
         return totalCaptured;
