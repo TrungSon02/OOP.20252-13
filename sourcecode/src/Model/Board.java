@@ -1,8 +1,9 @@
+package Model;
+
 import java.util.*;
 import javafx.util.Pair;
 
 
-//TODO (new): Add a clearSquare method to reset the value of a square to 0
 public class Board {
     // FIX: Remove all non constant attributes (and related parts) except the first one, change the logic to table[] (treating all squares the same)
     private int[] table;     // 10 small squares (5 per player) indices 1-5 for player1, 7-11 for player2, 0 for player 1, 6 for player 2
@@ -10,7 +11,6 @@ public class Board {
     private static final int P1_HOME = 0;
     private static final int P2_HOME = (TOTAL_SMALL_SQUARES + 2) / 2;
     private static final int INITIAL_PAWNS = 5;
-    private static final int INITIAL_KINGS = 1;
     private static final int CLOCKWISE = 1;
     private static final int COUNTER_CLOCKWISE = -1;
 
@@ -20,12 +20,10 @@ public class Board {
         for (int i = 0; i < TOTAL_SMALL_SQUARES + 2; i++) {
             table[i] = INITIAL_PAWNS;
         }
-        table[P1_HOME] = 0; // square used to virtualize p1 big square
-        table[P2_HOME] = 0; // square used to virtualize p2 big square
     }
     
     // Getter methods for accessing board state
-    public int[] gettable() {
+    public int[] getTable() {
         return table;
     }
     
@@ -42,14 +40,12 @@ public class Board {
     //FIX4: Remove all the capture and add score
     //FIX3: moveSequence store pair (square_id, value_of_that_square)
 
-    public List<Pair<Integer, Integer>> moveGem(int startPosition, int player, int direction) {
+    public List<Pair<Integer, Integer>> moveGem(int startPosition, int direction) {
         // use .getKey() to get the square number, use .getValue() to get the number of pawns in the square
         List<Pair<Integer, Integer>> moveSequence = new ArrayList<>();
-        boolean isP1 = (player == 0);
-        boolean isP2 = (player == 1);
 
         int pawnsToMove = table[startPosition];
-        moveSequence.add(new Pair(startPosition, table[startPosition]));
+        moveSequence.add(new Pair<>(startPosition, table[startPosition]));
         table[startPosition] = 0;
         
         int currentPos = startPosition;
@@ -61,7 +57,7 @@ public class Board {
             while (remainingPawns > 0) {
                 currentPos = Math.floorMod(currentPos + direction, TOTAL_SMALL_SQUARES + 2);
                 table[currentPos]++;
-                moveSequence.add(new Pair(currentPos, table[currentPos]));    
+                moveSequence.add(new Pair<>(currentPos, table[currentPos]));    
                 remainingPawns--;
             }
 
@@ -84,29 +80,28 @@ public class Board {
 
     //FIX: Change the return value to match player 0 and player 1
     public int checkEmpty() {
-        // TODO 3: check if the 5 squares of each player is empty
-        // returns 0 if neither player's squares are empty, 1 if player 1's squares are empty and 2 if player 2's squares are empty
+        // returns 0 if player 0's squares are empty, 1 if player 1's squares are empty and -1 if none is empty
+        // Check player 0's squares
+        boolean player0Empty = true;
+        for (int i = 1; i < P2_HOME; i++) {
+            if (table[i] > 0) {
+                player0Empty = false;
+                break;
+            }
+        }
+        
         // Check player 1's squares
         boolean player1Empty = true;
-        for (int i = 1; i < P2_HOME; i++) {
+        for (int i = P2_HOME + 1; i < TOTAL_SMALL_SQUARES + 2; i++) {
             if (table[i] > 0) {
                 player1Empty = false;
                 break;
             }
         }
         
-        // Check player 2's squares
-        boolean player2Empty = true;
-        for (int i = P2_HOME + 1; i < TOTAL_SMALL_SQUARES + 2; i++) {
-            if (table[i] > 0) {
-                player2Empty = false;
-                break;
-            }
-        }
-        
-        if (player1Empty){
+        if (player0Empty){
             return 0;
-        } else if (player2Empty){
+        } else if (player1Empty){
             return 1;
         } else {
             return -1;
@@ -141,23 +136,5 @@ public class Board {
             table[i] = 1;
         }
         return true;
-    }
-    
-    // for debugging
-    public void printBoard() {
-        System.out.println("=== Board State ===");
-        System.out.println("P1 Home (index " + P1_HOME + "): " + table[0]);
-        System.out.print("P1 squares (1 to 5): ");
-        for (int i = 1; i < P2_HOME; i++) {
-            System.out.print(table[i] + " ");
-        }
-        System.out.println();
-        System.out.print("P2 squares (11 down to 7): ");
-        for (int i = TOTAL_SMALL_SQUARES + 1; i > P2_HOME; i--) {
-            System.out.print(table[i] + " ");
-        }
-        System.out.println();
-        System.out.println("P2 Home (index " + P2_HOME + "): " + table[6]);
-        System.out.println("==================");
     }
 }
