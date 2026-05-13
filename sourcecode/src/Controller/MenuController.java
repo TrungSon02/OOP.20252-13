@@ -7,7 +7,7 @@ public class MenuController extends BaseController{
     @FXML
     public void showInstruction(ActionEvent event){
         //PHUC
-        //TODO: Call loadScene and pass in instruction.fxml path
+        //Call loadScene and pass in instruction.fxml path
         loadScene("/fxml/instruction.fxml", event);
     }
 }

@@ -59,10 +59,10 @@ public class MainGameController extends BaseController{
     public void updateScoreUI(int playerIndex, int score){
         //Hieu Anh
         //TODO: Based on the param, Update the score Label for the given player
-        if (playerIndex == 0) {
-        scoreP1.setText("Score: " + score);
-    } else {
-        scoreP2.setText("Score: " + score);
-    }
+            if (playerIndex == 0) {
+            scoreP1.setText("Score: " + score);
+        } else {
+            scoreP2.setText("Score: " + score);
+        }
     }
 }
