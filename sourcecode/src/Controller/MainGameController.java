@@ -31,6 +31,7 @@ public class MainGameController extends BaseController{
 
         scoreP1.setText("Score: 0");
         scoreP2.setText("Score: 0");
+        
     }
 
     public void getInput(){
@@ -54,8 +55,13 @@ public class MainGameController extends BaseController{
         //TODO 3: Add a number indicating the total gems on each square then update that number after each move
     }
     
-    public void updateScoreUI(){
+    public void updateScoreUI(int playerIndex, int score){
         //Hieu Anh
         //TODO: Based on the param, Update the score Label for the given player
+            if (playerIndex == 0) {
+            scoreP1.setText("Score: " + score);
+        } else {
+            scoreP2.setText("Score: " + score);
+        }
     }
 }
