@@ -2,6 +2,12 @@ package Controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.Rectangle;
+
 
 
 public class MainGameController extends BaseController{
@@ -9,11 +15,15 @@ public class MainGameController extends BaseController{
     @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
     @FXML private Label labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11;   
     @FXML private Label scoreP1, scoreP2;
+    @FXML private Rectangle overlay1;
+    @FXML private Arc overlay0;
+
 
     private Label[] allCells;
 
     @FXML
     public void initialize() {
+        setYellowSquare(overlay1);
         allCells = new Label[]{
                 labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
@@ -63,5 +73,37 @@ public class MainGameController extends BaseController{
         } else {
             scoreP2.setText("Score: " + score);
         }
+    }
+
+    private void setYellowSquare(Rectangle rect){
+        rect.setFill(Color.rgb(255, 255, 0, 0.15)); 
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.YELLOW);
+        glow.setRadius(50);
+        glow.setSpread(0.7);
+        rect.setEffect(glow);
+    }
+
+    private void setYellowSquare(Arc arc){
+        arc.setFill(Color.rgb(255, 255, 0, 0.15)); 
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.YELLOW);
+        glow.setRadius(50);
+        glow.setSpread(0.7);
+        arc.setEffect(glow);
+    }
+
+    private void setRedSquare(Rectangle rect){
+        rect.setFill(Color.rgb(255, 0, 0, 0.15)); 
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.RED);
+        glow.setRadius(50);
+        glow.setSpread(0.7);
+        rect.setEffect(glow);
+    }
+
+    private void resetSquare(Rectangle rect){
+        rect.setFill(Color.TRANSPARENT);
+        rect.setEffect(null);
     }
 }

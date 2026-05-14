@@ -44,6 +44,7 @@
                <children>
                   <Arc length="180.0" radiusX="150.0" radiusY="150.0" startAngle="90.0" strokeType="INSIDE" styleClass="game-arc" type="ROUND" />
                   <Label fx:id="labelCell0" text="Label" />
+                  <Arc fx:id="overlay0" length="180.0" radiusX="140.0" radiusY="140.0" startAngle="90.0" type="ROUND" fill="transparent" mouseTransparent="true" />
                </children>
             </StackPane>
             <VBox alignment="CENTER" spacing="0">
@@ -54,30 +55,35 @@
                            <children>
                               <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
                               <Label fx:id="labelCell1" text="Label" />
+                              <Rectangle fx:id="overlay1" height="130.0" width="130.0" fill="transparent" mouseTransparent="true" />
                            </children>
                         </StackPane>
                         <StackPane>
                            <children>
                               <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
                               <Label fx:id="labelCell2" text="Label" />
+                              <Rectangle fx:id="overlay2" height="130.0" width="130.0" fill="transparent" mouseTransparent="true" />
                            </children>
                         </StackPane>
                         <StackPane>
                            <children>
                               <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
                               <Label fx:id="labelCell3" text="Label" />
+                              <Rectangle fx:id="overlay3" height="130.0" width="130.0" fill="transparent" mouseTransparent="true" />
                            </children>
                         </StackPane>
                         <StackPane>
                            <children>
                               <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
                               <Label fx:id="labelCell4" text="Label" />
+                              <Rectangle fx:id="overlay4" height="130.0" width="130.0" fill="transparent" mouseTransparent="true" />
                            </children>
                         </StackPane>
                         <StackPane>
                            <children>
                               <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
                               <Label fx:id="labelCell5" text="Label" />
+                              <Rectangle fx:id="overlay5" height="130.0" width="130.0" fill="transparent" mouseTransparent="true" />
                            </children>
                         </StackPane>
                      </children>
@@ -88,30 +94,35 @@
                            <children>
                               <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
                               <Label fx:id="labelCell11" text="Label" />
+                              <Rectangle fx:id="overlay11" height="130.0" width="130.0" fill="transparent" mouseTransparent="true" />
                            </children>
                         </StackPane>
                         <StackPane>
                            <children>
                               <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
                               <Label fx:id="labelCell10" text="Label" />
+                              <Rectangle fx:id="overlay10" height="130.0" width="130.0" fill="transparent" mouseTransparent="true" />
                            </children>
                         </StackPane>
                         <StackPane>
                            <children>
                               <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
                               <Label fx:id="labelCell9" text="Label" />
+                              <Rectangle fx:id="overlay9" height="130.0" width="130.0" fill="transparent" mouseTransparent="true" />
                            </children>
                         </StackPane>
                         <StackPane>
                            <children>
                               <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
                               <Label fx:id="labelCell8" text="Label" />
+                              <Rectangle fx:id="overlay8" height="130.0" width="130.0" fill="transparent" mouseTransparent="true" />
                            </children>
                         </StackPane>
                         <StackPane>
                            <children>
                               <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
                               <Label fx:id="labelCell7" text="Label" />
+                              <Rectangle fx:id="overlay7" height="130.0" width="130.0" fill="transparent" mouseTransparent="true" />
                            </children>
                         </StackPane>
                      </children>
@@ -122,6 +133,7 @@
                <children>
                   <Arc length="180.0" radiusX="150.0" radiusY="150.0" startAngle="270.0" strokeType="INSIDE" styleClass="game-arc" type="ROUND" />
                   <Label fx:id="labelCell6" text="Label" />
+                  <Arc fx:id="overlay6" length="180.0" radiusX="140.0" radiusY="140.0" startAngle="270.0" type="ROUND" fill="transparent" mouseTransparent="true" />
                </children>
             </StackPane>
          </children>
