@@ -32,7 +32,7 @@ public class Game {
         }
 
         if (totalCaptured > 0) {
-            players[currentPlayer].addScore(totalCaptured);
+            players[currentPlayer].updateScore(totalCaptured);
         }
         
         return totalCaptured;
@@ -58,5 +58,9 @@ public class Game {
 
     public boolean isFinished() {
         return this.isFinished;
+    }
+
+    public Player[] getPlayers() {
+        return this.players;
     }
 }
