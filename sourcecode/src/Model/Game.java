@@ -11,10 +11,7 @@ public class Game {
     private boolean isFinished;
 
     public Game() {
-<<<<<<< HEAD:sourcecode/src/Game.java
-=======
         players = new Player[2];
->>>>>>> master:sourcecode/src/Model/Game.java
         players[0] = new Player();
         players[1] = new Player();
         this.board = new Board(); 
@@ -22,7 +19,7 @@ public class Game {
         this.isFinished = false;
     }
 
-    //TODO: Update 
+    //TODO: Update handle Capture to return a list of moves instead
     public int handleCapture(int stopIndex, int direction) {
         int totalCaptured = 0;
         int currentIndex = stopIndex;
@@ -70,8 +67,6 @@ public class Game {
     public boolean isFinished() {
         return this.isFinished;
     }
-<<<<<<< HEAD:sourcecode/src/Game.java
-=======
 
     public Player[] getPlayers() {
         return this.players;
@@ -87,5 +82,4 @@ public class Game {
         //TODO 3: Call checkEnding method from Board and update isFinished if needed, if game still continues, call checkEmpty from Board -> call fillGem if empty -> Switch players
         //If we need to fill empty square, return a list of moves. Else return an empty list
     }
->>>>>>> master:sourcecode/src/Model/Game.java
 }

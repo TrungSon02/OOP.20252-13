@@ -3,11 +3,8 @@ package Controller;
 import Model.Game;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-<<<<<<< HEAD
-=======
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
->>>>>>> feature/Controller
 
 public class MainGameController extends BaseController {
 
