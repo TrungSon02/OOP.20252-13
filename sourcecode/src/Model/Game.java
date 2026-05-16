@@ -1,4 +1,9 @@
 package Model;
+
+import java.util.List;
+
+import javafx.util.Pair;
+
 public class Game {
     private Board board;
     private Player[] players;
@@ -14,6 +19,7 @@ public class Game {
         this.isFinished = false;
     }
 
+    //TODO: Update 
     public int handleCapture(int stopIndex, int direction) {
         int totalCaptured = 0;
         int currentIndex = stopIndex;
@@ -61,12 +67,19 @@ public class Game {
     public boolean isFinished() {
         return this.isFinished;
     }
-<<<<<<< HEAD
-}
-=======
 
     public Player[] getPlayers() {
         return this.players;
     }
+
+    
+    public List<Pair<Integer, Integer>> proccessingTurn(){
+        //TODO 2: Implement this method: Call moveGem -> Call handle capture
+        //return: A complete sequence of moves from the start to the end (combine the existing moves in moveGem with new captured moves)
+    }
+
+    public List<Pair<Integer, Integer>> postTurnProcessing(){
+        //TODO 3: Call checkEnding method from Board and update isFinished if needed, if game still continues, call checkEmpty from Board -> call fillGem if empty -> Switch players
+        //If we need to fill empty square, return a list of moves. Else return an empty list
+    }
 }
->>>>>>> feature/Controller
