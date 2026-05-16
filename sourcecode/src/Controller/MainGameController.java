@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.Game;
-import Model.Player;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -21,6 +20,7 @@ public class MainGameController extends BaseController {
 
     @FXML
     public void initialize() {
+        game = new Game();
         allCells = new Label[]{
                 labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
@@ -38,29 +38,21 @@ public class MainGameController extends BaseController {
 
         scoreP1.setText("Score: 0");
         scoreP2.setText("Score: 0");
-
-        Player player1 = new Player();
-        Player player2 = new Player();
-        
-        game = new Game(player1, player2);
-
         updatePlayerAvatars();
     }
 
     private void updatePlayerAvatars() {
-        if (game != null && game.getPlayers() != null) {
-            String avatarPathP1 = game.getPlayers()[0].getAvatar();
-            String avatarPathP2 = game.getPlayers()[1].getAvatar();
+        String avatarPathP1 = game.getPlayers()[0].getAvatar();
+        String avatarPathP2 = game.getPlayers()[1].getAvatar();
+        
+        try {
+            Image imgPlayer1 = new Image(getClass().getResourceAsStream(avatarPathP1));
+            Image imgPlayer2 = new Image(getClass().getResourceAsStream(avatarPathP2));
             
-            try {
-                Image imgPlayer1 = new Image(getClass().getResourceAsStream(avatarPathP1));
-                Image imgPlayer2 = new Image(getClass().getResourceAsStream(avatarPathP2));
-                
-                if (avatarP1 != null) avatarP1.setImage(imgPlayer1);
-                if (avatarP2 != null) avatarP2.setImage(imgPlayer2);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            if (avatarP1 != null) avatarP1.setImage(imgPlayer1);
+            if (avatarP2 != null) avatarP2.setImage(imgPlayer2);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
