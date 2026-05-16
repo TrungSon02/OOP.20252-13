@@ -4,8 +4,9 @@ public class Game {
     private int currentPlayer;
     private boolean isFinished;
 
-    public Game(Player player1, Player player2) {
-        this.players = new Player[]{player1, player2}; 
+    public Game() {
+        players[0] = new Player();
+        players[1] = new Player();
         this.board = new Board(); 
         this.currentPlayer = 0;
         this.isFinished = false;
