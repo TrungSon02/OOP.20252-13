@@ -1,19 +1,29 @@
 package Controller;
 
+import Model.Game;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+<<<<<<< HEAD
+=======
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+>>>>>>> feature/Controller
 
-
-public class MainGameController extends BaseController{
+public class MainGameController extends BaseController {
 
     @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
     @FXML private Label labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11;   
     @FXML private Label scoreP1, scoreP2;
+    
+    @FXML private ImageView avatarP1, avatarP2;
 
     private Label[] allCells;
+    
+    private Game game;
 
     @FXML
     public void initialize() {
+        game = new Game();
         allCells = new Label[]{
                 labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
@@ -31,7 +41,22 @@ public class MainGameController extends BaseController{
 
         scoreP1.setText("Score: 0");
         scoreP2.setText("Score: 0");
+        updatePlayerAvatars();
+    }
+
+    private void updatePlayerAvatars() {
+        String avatarPathP1 = game.getPlayers()[0].getAvatar();
+        String avatarPathP2 = game.getPlayers()[1].getAvatar();
         
+        try {
+            Image imgPlayer1 = new Image(getClass().getResourceAsStream(avatarPathP1));
+            Image imgPlayer2 = new Image(getClass().getResourceAsStream(avatarPathP2));
+            
+            if (avatarP1 != null) avatarP1.setImage(imgPlayer1);
+            if (avatarP2 != null) avatarP2.setImage(imgPlayer2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void getInput(){

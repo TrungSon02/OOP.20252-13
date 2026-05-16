@@ -42,5 +42,9 @@ public class Player {
         this.score += points;
     }
 
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> feature/Controller
