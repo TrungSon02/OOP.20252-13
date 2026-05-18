@@ -7,6 +7,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 
 
@@ -15,19 +16,28 @@ public class MainGameController extends BaseController{
     @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
     @FXML private Label labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11;   
     @FXML private Label scoreP1, scoreP2;
-    @FXML private Rectangle overlay1;
-    @FXML private Arc overlay0;
+    @FXML private Rectangle overlay1, overlay2, overlay3, overlay4, overlay5, overlay7, overlay8, overlay9, overlay10, overlay11;
+    @FXML private Arc overlay0, overlay6;
 
-
+    private int state = 1; 
+    //state = 1: light up all squares
+    //state = 2: select direction
+    //state = 3: move
     private Label[] allCells;
+    private Shape[] allOverlays;
 
     @FXML
     public void initialize() {
-        setYellowSquare(overlay1);
         allCells = new Label[]{
+
                 labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
             };
+
+        allOverlays = new Shape[]{
+            overlay0, overlay1, overlay2, overlay3, overlay4, overlay5,
+            overlay6, overlay7, overlay8, overlay9, overlay10, overlay11
+        };
 
         for (int i = 1; i <= 11; i++) {
                 if (i == 6) continue; 
@@ -46,11 +56,11 @@ public class MainGameController extends BaseController{
 
     public void getInput(){
         //NAM
-        //TODO: Handle player input via one of two methods:
-        //First method: Drag and Drop
-        //Second method: Select a square -> then select direction
+        //TODO: Handle player input : Select a square -> then select direction
         //NOTE: Check player's turn for the available squares
         //After getting input, call onPlayerMove(square, direction)
+        //called whenever player clicks
+        //need to check the state of game
     }
 
     public void onPlayerMove(){
@@ -75,35 +85,56 @@ public class MainGameController extends BaseController{
         }
     }
 
-    private void setYellowSquare(Rectangle rect){
-        rect.setFill(Color.rgb(255, 255, 0, 0.15)); 
+    private void setYellowSquare(Shape shape){
+        shape.setFill(Color.rgb(255, 255, 0, 0.15)); 
         DropShadow glow = new DropShadow();
         glow.setColor(Color.YELLOW);
         glow.setRadius(50);
         glow.setSpread(0.7);
-        rect.setEffect(glow);
+        shape.setEffect(glow);
     }
 
-    private void setYellowSquare(Arc arc){
-        arc.setFill(Color.rgb(255, 255, 0, 0.15)); 
-        DropShadow glow = new DropShadow();
-        glow.setColor(Color.YELLOW);
-        glow.setRadius(50);
-        glow.setSpread(0.7);
-        arc.setEffect(glow);
-    }
-
-    private void setRedSquare(Rectangle rect){
-        rect.setFill(Color.rgb(255, 0, 0, 0.15)); 
+    private void setRedSquare(Shape shape){
+        shape.setFill(Color.rgb(255, 0, 0, 0.15)); 
         DropShadow glow = new DropShadow();
         glow.setColor(Color.RED);
         glow.setRadius(50);
         glow.setSpread(0.7);
-        rect.setEffect(glow);
+        shape.setEffect(glow);
     }
 
-    private void resetSquare(Rectangle rect){
-        rect.setFill(Color.TRANSPARENT);
-        rect.setEffect(null);
+    private void resetSquare(Shape shape){
+        shape.setFill(Color.TRANSPARENT);
+        shape.setEffect(null);
     }
+
+    public boolean checkState1(){
+        
+    }
+    public boolean checkState2(){
+        
+    }
+
+    public void convertToID(){
+
+    }
+    public void highlightMoveOption(int idx){
+        setRedSquare(allOverlays[idx]);
+        
+    }
+
+    public void highlightAvailableSquare(Shape shape,int currentPlayer){
+        //NAM
+        //TODO: Check which player's turn to highlight the correct square
+        if(currentPlayer == 0){
+            for(int i = 1; i<= 5;i++){
+                setYellowSquare(allOverlays[i]);
+            }
+        }else {
+            for(int i = 7; i<= 11;i++){
+                setYellowSquare(allOverlays[i]);
+            }
+        }
+    }
+
 }
