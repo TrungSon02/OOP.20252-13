@@ -151,6 +151,13 @@
     -fx-padding: 20 100 20 40;
 }
 
+.gem-count-label {
+    -fx-font-family: "Super Beatpop";
+    -fx-font-size: 55px;
+    -fx-text-fill: #FFF5E0;
+    -fx-effect: dropshadow(gaussian, black, 2, 0.8, 0, 0);
+}
+
 .ending-label{
     -fx-font-family: "Xirod";
     -fx-font-size: 24px;

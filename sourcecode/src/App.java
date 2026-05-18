@@ -27,6 +27,7 @@ public class App extends Application {
     private void loadFont(){
         Font.loadFont(getClass().getResourceAsStream("/font/Xirod.otf"), 36);
         Font.loadFont(getClass().getResourceAsStream("/font/HN-Artukge-Script.ttf"), 36);
+        Font.loadFont(getClass().getResourceAsStream("/font/Super Beatpop.ttf"), 36);
         //Font.getFamilies().forEach(System.out::println);
     }
 

@@ -3,11 +3,8 @@ package Controller;
 import Model.Game;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-<<<<<<< HEAD
-=======
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
->>>>>>> feature/Controller
 
 public class MainGameController extends BaseController {
 
@@ -29,16 +26,12 @@ public class MainGameController extends BaseController {
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
             };
 
-        for (int i = 1; i <= 11; i++) {
-                if (i == 6) continue; 
+        for (int i = 0; i <= 11; i++) {
                 if (allCells[i] != null) {
                     allCells[i].setText("5");
                 }
             }
-        
-        if (labelCell0 != null) labelCell0.setText("1");
-        if (labelCell6 != null) labelCell6.setText("1");
-
+    
         scoreP1.setText("Score: 0");
         scoreP2.setText("Score: 0");
         updatePlayerAvatars();
