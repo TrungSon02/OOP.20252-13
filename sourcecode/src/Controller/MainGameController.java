@@ -19,10 +19,7 @@ public class MainGameController extends BaseController{
     @FXML private Rectangle overlay1, overlay2, overlay3, overlay4, overlay5, overlay7, overlay8, overlay9, overlay10, overlay11;
     @FXML private Arc overlay0, overlay6;
 
-    private int state = 1; 
-    //state = 1: light up all squares
-    //state = 2: select direction
-    //state = 3: move
+
     private Label[] allCells;
     private Shape[] allOverlays;
 
@@ -103,9 +100,9 @@ public class MainGameController extends BaseController{
         shape.setEffect(glow);
     }
 
-    private void resetSquare(Shape shape){
-        shape.setFill(Color.TRANSPARENT);
-        shape.setEffect(null);
+    private void resetSquare(Rectangle rect){
+        rect.setFill(Color.TRANSPARENT);
+        rect.setEffect(null);
     }
         //TODO: check squares state
     public boolean checkState1(){
