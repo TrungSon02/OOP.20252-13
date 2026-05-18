@@ -107,12 +107,12 @@ public class MainGameController extends BaseController{
         shape.setFill(Color.TRANSPARENT);
         shape.setEffect(null);
     }
-
+        //TODO: check squares state
     public boolean checkState1(){
-        
+        return true;
     }
     public boolean checkState2(){
-        
+        return true;
     }
 
     public void convertToID(){
