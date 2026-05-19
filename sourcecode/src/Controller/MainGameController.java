@@ -23,10 +23,6 @@ public class MainGameController extends BaseController {
     @FXML
     public void initialize() {
         this.game = new Game();
-        if (game.getPlayers() != null){
-            labelPlayer1.setText(game.getPlayers()[0].getName());
-            labelPlayer2.setText(game.getPlayers()[1].getName());
-        }
         allCells = new Label[]{
                 labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
@@ -40,10 +36,12 @@ public class MainGameController extends BaseController {
     
         scoreP1.setText("Score: 0");
         scoreP2.setText("Score: 0");
-        updatePlayerAvatars();
+        initializePlayerData();
     }
 
-    private void updatePlayerAvatars() {
+    private void initializePlayerData() {
+        labelPlayer1.setText("Player " + game.getPlayers()[0].getName());
+        labelPlayer2.setText("Player " + game.getPlayers()[1].getName());
         String avatarPathP1 = game.getPlayers()[0].getAvatar();
         String avatarPathP2 = game.getPlayers()[1].getAvatar();
         
