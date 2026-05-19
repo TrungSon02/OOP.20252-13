@@ -8,6 +8,8 @@ import javafx.scene.image.ImageView;
 
 public class MainGameController extends BaseController {
 
+    @FXML private Label labelPlayer1, labelPlayer2;
+
     @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
     @FXML private Label labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11;   
     @FXML private Label scoreP1, scoreP2;
@@ -20,7 +22,12 @@ public class MainGameController extends BaseController {
 
     @FXML
     public void initialize() {
-        game = new Game();
+        this.game = new Game();
+        if (game.getPlayers() != null){
+            labelPlayer1.setText(game.getPlayers()[0].getName());
+            labelPlayer2.setText(game.getPlayers()[1].getName());
+        }
+        
         allCells = new Label[]{
                 labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11

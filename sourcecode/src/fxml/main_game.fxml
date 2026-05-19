@@ -23,7 +23,7 @@
             </HBox>
             <VBox alignment="CENTER">
                <children>
-                  <Label styleClass="name-label" text="Player 1" />
+                  <Label fx:id="labelPlayer1" styleClass="name-label" text="Player 1" />
                   <StackPane maxWidth="120.0" styleClass="avatar-frame">
                      <ImageView fx:id="avatarP1" fitHeight="120.0" fitWidth="120.0" preserveRatio="false" />
                   </StackPane>
@@ -136,7 +136,7 @@
                   <StackPane maxWidth="120.0" styleClass="avatar-frame">
                      <ImageView fx:id="avatarP2" fitHeight="120.0" fitWidth="120.0" preserveRatio="false" />
                   </StackPane>
-                  <Label styleClass="name-label" text="Player 2" />
+                  <Label fx:id="labelPlayer2" styleClass="name-label" text="Player 2" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefWidth="200" HBox.hgrow="ALWAYS">
