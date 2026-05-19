@@ -11,7 +11,7 @@ public class Player {
     
     private String generatePlayerNames(){
         Random random = new Random();
-        String tmp = PLAYER_ADJECTIVES[random.nextInt(PLAYER_ADJECTIVES.length)] + PLAYER_NOUN[random.nextInt(PLAYER_NOUN.length)];
+        String tmp = PLAYER_ADJECTIVES[random.nextInt(PLAYER_ADJECTIVES.length)] + " " + PLAYER_NOUN[random.nextInt(PLAYER_NOUN.length)];
         return tmp;
     }
  
