@@ -1,10 +1,16 @@
 package Controller;
 
+import java.util.List;
+
 import Model.Game;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Pair;
+import javafx.util.Duration;
 
 public class MainGameController extends BaseController {
 
@@ -13,12 +19,11 @@ public class MainGameController extends BaseController {
     @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
     @FXML private Label labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11;   
     @FXML private Label scoreP1, scoreP2;
-    
     @FXML private ImageView avatarP1, avatarP2;
+    @FXML private Label[] allCells;
 
-    private Label[] allCells;
-    
     private Game game;
+    private static final Duration STEP_DELAY = Duration.millis(1000); // tweak speed here
 
     @FXML
     public void initialize() {
@@ -70,11 +75,21 @@ public class MainGameController extends BaseController {
         //TODO: Already done on paper, write it back here
     }
 
-    public void animateMove(){
-        //Hieu Anh 
-        //TODO 1: Make a new folder in image, try to make the collection of images containing 1,2,3,4,... gems (make several collection)
-        //TODO 2: Based on the list of move (parameter of this method) change the images of each square 
-        //TODO 3: Add a number indicating the total gems on each square then update that number after each move
+    public void animateMoves(List<Pair<Integer, Integer>> moves) {
+        Timeline timeline = new Timeline();
+        for (int i = 0; i < moves.size(); i++) {
+            Pair<Integer, Integer> step = moves.get(i);
+            int cellIndex = step.getKey();
+            int newValue  = step.getValue();
+            Duration when = STEP_DELAY.multiply(i + 1);
+
+            timeline.getKeyFrames().add(new KeyFrame(when, e -> {
+                if (allCells[cellIndex] != null) {  // this line is a safety check
+                    allCells[cellIndex].setText(String.valueOf(newValue));// actual action here
+                }
+            }));
+        }
+        timeline.play();
     }
     
     public void updateScoreUI(int playerIndex, int score){

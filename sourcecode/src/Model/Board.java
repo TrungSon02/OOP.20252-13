@@ -45,7 +45,7 @@ public class Board {
         List<Pair<Integer, Integer>> moveSequence = new ArrayList<>();
 
         int pawnsToMove = table[startPosition];
-        moveSequence.add(new Pair<>(startPosition, table[startPosition]));
+        moveSequence.add(new Pair<>(startPosition, 0));
         table[startPosition] = 0;
         
         int currentPos = startPosition;
@@ -69,6 +69,7 @@ public class Board {
             if (table[nextSquare] > 0){
                 remainingPawns = table[nextSquare];
                 table[nextSquare] = 0;
+                moveSequence.add(new Pair<>(nextSquare, 0));
                 currentPos = nextSquare;
                 continue;
             } else {
