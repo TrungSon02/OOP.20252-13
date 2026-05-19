@@ -27,7 +27,6 @@ public class MainGameController extends BaseController {
             labelPlayer1.setText(game.getPlayers()[0].getName());
             labelPlayer2.setText(game.getPlayers()[1].getName());
         }
-        
         allCells = new Label[]{
                 labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
