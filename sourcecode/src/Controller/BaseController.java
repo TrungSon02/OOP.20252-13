@@ -62,9 +62,8 @@ public class BaseController {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit Confirmation");
         alert.setHeaderText("Are you sure you want to quit the game?");
-        alert.setContentText("Any unsaved progress will be lost.");
 
-        ButtonType buttonTypeExit = new ButtonType("Quit");
+        ButtonType buttonTypeExit = new ButtonType("Yes");
         ButtonType buttonTypeCancel = new ButtonType("Cancel");
         alert.getButtonTypes().setAll(buttonTypeExit, buttonTypeCancel);
 
