@@ -20,7 +20,6 @@ public class Game {
         this.isFinished = false;
     }
 
-    //TODO: Update handle Capture to return a list of moves instead
     public List<Pair<Integer, Integer>> handleCapture(int stopIndex, int direction) {
         List<Pair<Integer, Integer>> captureMoves = new ArrayList<>();
         int totalCaptured = 0;
@@ -79,7 +78,7 @@ public class Game {
 
     
     public List<Pair<Integer, Integer>> proccessingTurn(int startIndex, int direction){
-        //TODO 2: Implement this method: Call moveGem -> Call handle capture
+        //Implement this method: Call moveGem -> Call handle capture
         //return: A complete sequence of moves from the start to the end (combine the existing moves in moveGem with new captured moves)
         List<Pair<Integer, Integer>> moveSequence = board.moveGem(startIndex, direction);
         if (moveSequence != null && !moveSequence.isEmpty()) {
@@ -91,7 +90,7 @@ public class Game {
     }
 
     public List<Pair<Integer, Integer>> postTurnProcessing(){
-        //TODO 3: Call checkEnding method from Board and update isFinished if needed, if game still continues, call checkEmpty from Board -> call fillGem if empty -> Switch players
+        //Call checkEnding method from Board and update isFinished if needed, if game still continues, call checkEmpty from Board -> call fillGem if empty -> Switch players
         //If we need to fill empty square, return a list of moves. Else return an empty list
         List<Pair<Integer, Integer>> fillMoves = new ArrayList<>();
         if (board.checkEnding()) {
