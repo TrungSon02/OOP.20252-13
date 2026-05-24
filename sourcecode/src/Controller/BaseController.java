@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 public class BaseController {
     private Stage stage;
@@ -57,8 +59,21 @@ public class BaseController {
     public void exit(){
         //PHUC
         //Exit the game (Like alt f4). (Watch the Code Bro YT vid for the sample code for exiting game)
-        Platform.exit();
-        System.exit(0);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exit Confirmation");
+        alert.setHeaderText("Are you sure you want to quit the game?");
+        alert.setContentText("Any unsaved progress will be lost.");
+
+        ButtonType buttonTypeExit = new ButtonType("Quit");
+        ButtonType buttonTypeCancel = new ButtonType("Cancel");
+        alert.getButtonTypes().setAll(buttonTypeExit, buttonTypeCancel);
+
+        java.util.Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == buttonTypeExit) {
+            Platform.exit();
+            System.exit(0);
+        }
     }
 
 }
