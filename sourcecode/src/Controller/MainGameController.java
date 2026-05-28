@@ -7,10 +7,16 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Pair;
 import javafx.util.Duration;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class MainGameController extends BaseController {
 
@@ -21,9 +27,15 @@ public class MainGameController extends BaseController {
     @FXML private Label scoreP1, scoreP2;
     @FXML private ImageView avatarP1, avatarP2;
     @FXML private Label[] allCells;
+    @FXML private Shape[] allOverlays;
 
     private Game game;
     private static final Duration STEP_DELAY = Duration.millis(1000); // tweak speed here
+    @FXML private Rectangle overlay1, overlay2, overlay3, overlay4, overlay5, overlay7, overlay8, overlay9, overlay10, overlay11;
+    @FXML private Arc overlay0, overlay6;
+
+    private int state = 0;
+    private int selectedSquare = -1;
 
     @FXML
     public void initialize() {
@@ -33,11 +45,15 @@ public class MainGameController extends BaseController {
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
             };
 
+        allOverlays = new Shape[]{
+            overlay0, overlay1, overlay2, overlay3, overlay4, overlay5,
+            overlay6, overlay7, overlay8, overlay9, overlay10, overlay11
+        };
+        
+
         for (int i = 0; i <= 11; i++) {
-                if (allCells[i] != null) {
-                    allCells[i].setText("5");
-                }
-            }
+            allCells[i].setText("5");
+        }
     
         scoreP1.setText("Score: 0");
         scoreP2.setText("Score: 0");
@@ -61,16 +77,46 @@ public class MainGameController extends BaseController {
         }
     }
 
-    public void getInput(){
+    public void getInput(MouseEvent event){
         //NAM
-        //TODO: Handle player input via one of two methods:
-        //First method: Drag and Drop
-        //Second method: Select a square -> then select direction
+        //TODO: Handle player input : Select a square -> then select direction
         //NOTE: Check player's turn for the available squares
         //After getting input, call onPlayerMove(square, direction)
+        //called whenever player clicks
+        //need to check the state of game
+        Shape clickedShape = (Shape) event.getSource();
+        String fxid = clickedShape.getId();
+        int shapeID = convertStringToInt(fxid);
+        //System.out.println(shapeID);
+        if(state == 1){
+            if(checkState1(currentPlayer, shapeID)){
+                state = 2;
+                resetAllSquares();
+                highlightAvailableSquareState2(shapeID);
+                selectedSquare = shapeID; 
+            }
+        }
+        if(state == 2){
+            if(checkState2(shapeID)){
+                if(shapeID == selectedSquare){
+                    state = 1;
+                    resetAllSquares();
+                    highlightAvailableSquareState1(clickedShape, currentPlayer);
+                }else{
+                    int direction = shapeID - selectedSquare;
+                    if(direction == -11){
+                       direction = 1; 
+                    }
+                    onPlayerMove(selectedSquare,direction);
+                    resetAllSquares();
+                    state = 0;
+                }
+            }
+        }
+        
+        
     }
-
-    public void onPlayerMove(){
+    public void onPlayerMove(int selectedSquare, int direction){
         //Son 
         //TODO: Already done on paper, write it back here
     }
@@ -100,5 +146,85 @@ public class MainGameController extends BaseController {
         } else {
             scoreP2.setText("Score: " + score);
         }
+    }
+
+    private void setYellowSquare(Shape shape){
+        shape.setFill(Color.rgb(255, 255, 0, 0.15)); 
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.YELLOW);
+        glow.setRadius(50);
+        glow.setSpread(0.7);
+        shape.setEffect(glow);
+    }
+
+    private void setRedSquare(Shape shape){
+        shape.setFill(Color.rgb(255, 0, 0, 0.15)); 
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.RED);
+        glow.setRadius(50);
+        glow.setSpread(0.7);
+        shape.setEffect(glow);
+    }
+
+    private void resetSquare(Shape shape){
+        shape.setFill(Color.TRANSPARENT);
+        shape.setEffect(null);
+    }
+
+    public void resetAllSquares(){
+        for(Shape shape : allOverlays){
+            resetSquare(shape);
+        }
+    }
+    //TODO: check squares state
+    public boolean checkState1(int currentPlayer, int shapeID){
+        if(currentPlayer == 0){
+            if(shapeID < 1 || shapeID > 5){
+                return false;
+            }
+        }else if(currentPlayer == 1){
+            if(shapeID < 7 || shapeID > 11){
+                return false;
+            }
+        }
+        return true;
+    }
+    public boolean checkState2(int shapeID){
+        int LeftNeighbour = (shapeID + 1 + 12) % 12;
+        int RightNeighbour = (shapeID - 1 + 12) % 12;
+        if(shapeID == LeftNeighbour || shapeID == RightNeighbour || shapeID == selectedSquare){
+            return true;
+        }
+        return false;
+    }
+
+
+    public void highlightAvailableSquareState1(Shape shape,int currentPlayer){
+        //NAM
+        //TODO: Check which player's turn to highlight the correct square
+        if(currentPlayer == 0){
+            for(int i = 1; i<= 5;i++){
+                setYellowSquare(allOverlays[i]);
+            }
+        }else {
+            for(int i = 7; i<= 11;i++){
+                setYellowSquare(allOverlays[i]);
+            }
+        }
+    }
+
+    public void highlightAvailableSquareState2(int shapeID){
+        setRedSquare(allOverlays[shapeID]);
+        int LeftNeighbour = (shapeID + 1 + 12) % 12;
+        int RightNeighbour = (shapeID - 1 + 12) % 12;
+        setYellowSquare(allOverlays[LeftNeighbour]);
+        setYellowSquare(allOverlays[RightNeighbour]);
+
+    }
+
+    public static int convertStringToInt(String str){
+        str=str.replaceAll("[^0-9]", "");
+        
+        return Integer.parseInt(str);
     }
 }
