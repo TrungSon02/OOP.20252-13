@@ -5,7 +5,7 @@ public class Player {
     private String name;    
     private double score;
     private String avatar;
-
+    private static int NumberTaken;
     static final String[] PLAYER_ADJECTIVES = {"Hungry", "Brave", "Cunning", "Swift", "Almighty", "Wise", "Fierce", "Smart", "Quick"};
     static final String[] PLAYER_NOUN = {"Hippo", "Giraffe", "Elephant", "Lion","Tiger", "Bear", "Wolf", "Fox", "Eagle", "Shark","Sloth","Turtle","Pattrick","Banana","Chongus",};
     
@@ -14,11 +14,16 @@ public class Player {
         String tmp = PLAYER_ADJECTIVES[random.nextInt(PLAYER_ADJECTIVES.length)] + " " + PLAYER_NOUN[random.nextInt(PLAYER_NOUN.length)];
         return tmp;
     }
- 
-    public Player() {
+
+    public Player(int PlayerID) {
         this.name = generatePlayerNames();
         this.score = 0;
-        this.avatar = "/image/avatar/Pattrick_" + (new Random().nextInt(9)+1) + ".jpg";
+        if(PlayerID == 0){
+            this.avatar = "/image/avatar/Pattrick_" + (new Random().nextInt(5)+1) + ".jpg";
+        }else{
+            this.avatar = "/image/avatar/Pattrick_" + (new Random().nextInt(4)+6) + ".jpg";
+        }
+        
     }
 
     public String getName() {

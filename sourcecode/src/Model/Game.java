@@ -13,8 +13,8 @@ public class Game {
 
     public Game() {
         players = new Player[2];
-        players[0] = new Player();
-        players[1] = new Player();
+        players[0] = new Player(0);
+        players[1] = new Player(1);
         this.board = new Board(); 
         this.currentPlayer = 0;
         this.isFinished = false;
