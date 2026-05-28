@@ -87,7 +87,9 @@ public class MainGameController extends BaseController {
         Shape clickedShape = (Shape) event.getSource();
         String fxid = clickedShape.getId();
         int shapeID = convertStringToInt(fxid);
-        //System.out.println(shapeID);
+        System.out.println(shapeID);
+
+        /* 
         if(state == 1){
             if(checkState1(currentPlayer, shapeID)){
                 state = 2;
@@ -112,13 +114,13 @@ public class MainGameController extends BaseController {
                     state = 0;
                 }
             }
+            
         }
-        
+        */
         
     }
     public void onPlayerMove(int selectedSquare, int direction){
-        //Son 
-        //TODO: Already done on paper, write it back here
+        
     }
 
     public void animateMoves(List<Pair<Integer, Integer>> moves) {
