@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.shape.Rectangle?>
+
+<BorderPane styleClass="game-background" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainGameController">
+   <top>
+      <HBox alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefWidth="200" style="-fx-padding: 0 0 0 30;" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button onAction="#goHome" styleClass="exit-small-button" />
+                  <Button styleClass="music-button" />
+                  <Button styleClass="audio-button" />
+               </children>
+            </HBox>
+            <VBox alignment="CENTER">
+               <children>
+                  <Label fx:id="labelPlayer1" styleClass="name-label" text="Player 1" />
+                  <StackPane maxWidth="120.0" styleClass="avatar-frame">
+                     <ImageView fx:id="avatarP1" fitHeight="120.0" fitWidth="120.0" preserveRatio="false" />
+                  </StackPane>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefWidth="200" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="scoreP1" styleClass="score-label" text="Score: 0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <HBox alignment="CENTER">
+         <children>
+            <StackPane>
+               <children>
+                  <Arc length="180.0" radiusX="150.0" radiusY="150.0" startAngle="90.0" strokeType="INSIDE" styleClass="game-arc" type="ROUND" />
+                  <Label fx:id="labelCell0" styleClass="gem-count-label" text="0" StackPane.alignment="CENTER_RIGHT"/>
+               </children>
+            </StackPane>
+            <VBox alignment="CENTER" spacing="0">
+               <children>
+                  <HBox alignment="CENTER" spacing="0">
+                     <children>
+                        <StackPane>
+                           <children>
+                              <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                              <Label fx:id="labelCell1" styleClass="gem-count-label" text="Label" StackPane.alignment="BOTTOM_RIGHT"/>
+                           </children>
+                        </StackPane>
+                        <StackPane>
+                           <children>
+                              <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                              <Label fx:id="labelCell2" styleClass="gem-count-label" text="Label" StackPane.alignment="BOTTOM_RIGHT"/>
+                           </children>
+                        </StackPane>
+                        <StackPane>
+                           <children>
+                              <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                              <Label fx:id="labelCell3" styleClass="gem-count-label" text="Label" StackPane.alignment="BOTTOM_RIGHT"/>
+                           </children>
+                        </StackPane>
+                        <StackPane>
+                           <children>
+                              <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                              <Label fx:id="labelCell4" styleClass="gem-count-label" text="Label" StackPane.alignment="BOTTOM_RIGHT"/>
+                           </children>
+                        </StackPane>
+                        <StackPane>
+                           <children>
+                              <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                              <Label fx:id="labelCell5" styleClass="gem-count-label" text="Label" StackPane.alignment="BOTTOM_RIGHT"/>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER" spacing="0">
+                     <children>
+                        <StackPane>
+                           <children>
+                              <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                              <Label fx:id="labelCell11" styleClass="gem-count-label" text="Label" StackPane.alignment="BOTTOM_RIGHT"/>
+                           </children>
+                        </StackPane>
+                        <StackPane>
+                           <children>
+                              <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                              <Label fx:id="labelCell10" styleClass="gem-count-label" text="Label" StackPane.alignment="BOTTOM_RIGHT"/>
+                           </children>
+                        </StackPane>
+                        <StackPane>
+                           <children>
+                              <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                              <Label fx:id="labelCell9" styleClass="gem-count-label" text="Label" StackPane.alignment="BOTTOM_RIGHT"/>
+                           </children>
+                        </StackPane>
+                        <StackPane>
+                           <children>
+                              <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                              <Label fx:id="labelCell8" styleClass="gem-count-label" text="Label" StackPane.alignment="BOTTOM_RIGHT"/>
+                           </children>
+                        </StackPane>
+                        <StackPane>
+                           <children>
+                              <Rectangle height="150.0" onMouseClicked="#getInput" strokeType="INSIDE" styleClass="game-square" width="150.0" />
+                              <Label fx:id="labelCell7" styleClass="gem-count-label" text="Label" StackPane.alignment="BOTTOM_RIGHT"/>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <StackPane>
+               <children>
+                  <Arc length="180.0" radiusX="150.0" radiusY="150.0" startAngle="270.0" strokeType="INSIDE" styleClass="game-arc" type="ROUND" />
+                  <Label fx:id="labelCell6" styleClass="gem-count-label" text="Label" StackPane.alignment="CENTER_LEFT"/>
+               </children>
+            </StackPane>
+         </children>
+      </HBox>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER">
+         <children>
+            <VBox alignment="CENTER_LEFT" prefWidth="200" HBox.hgrow="ALWAYS" />
+            <VBox alignment="CENTER">
+               <children>
+                  <StackPane maxWidth="120.0" styleClass="avatar-frame">
+                     <ImageView fx:id="avatarP2" fitHeight="120.0" fitWidth="120.0" preserveRatio="false" />
+                  </StackPane>
+                  <Label fx:id="labelPlayer2" styleClass="name-label" text="Player 2" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefWidth="200" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="scoreP2" styleClass="score-label" text="Score: 0" />
+               </children></VBox>
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>

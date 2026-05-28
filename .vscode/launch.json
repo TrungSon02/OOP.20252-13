@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "App",
+      "request": "launch",
+      "mainClass": "App",
+      "vmArgs": "--module-path lib/javafx-sdk-26.0.1/lib --add-modules javafx.controls,javafx.fxml --enable-native-access=javafx.graphics"
+    }
+  ]
+}
+
