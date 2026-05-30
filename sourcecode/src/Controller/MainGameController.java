@@ -10,8 +10,6 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
-
-
 public class MainGameController extends BaseController{
 
     @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
@@ -20,14 +18,17 @@ public class MainGameController extends BaseController{
     @FXML private Rectangle overlay1, overlay2, overlay3, overlay4, overlay5, overlay7, overlay8, overlay9, overlay10, overlay11;
     @FXML private Arc overlay0, overlay6;
 
-
+    private int state = 0;
+    private int selectedSquare = -1;
+    //state 1:highlights all available square
+    //state 2: highlight red square that was chosen, highlight yellow squares that are available for next move
+    //state 3: call player move
     private Label[] allCells;
     private Shape[] allOverlays;
 
     @FXML
     public void initialize() {
         allCells = new Label[]{
-
                 labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
             };
@@ -59,11 +60,38 @@ public class MainGameController extends BaseController{
         //After getting input, call onPlayerMove(square, direction)
         //called whenever player clicks
         //need to check the state of game
-
+        Shape clickedShape = (Shape) event.getSource();
+        String fxid = clickedShape.getId();
+        int shapeID = convertStringToInt(fxid);
+        //System.out.println(shapeID);
+        if(state == 1){
+            if(checkState1(currentPlayer, shapeID)){
+                state = 2;
+                resetAllSquares();
+                highlightAvailableSquareState2(shapeID);
+                selectedSquare = shapeID; 
+            }
+        }else if(state == 2){
+            if(checkState2(shapeID)){
+                if(shapeID == selectedSquare){
+                    state = 1;
+                    resetAllSquares();
+                    highlightAvailableSquareState1(clickedShape, currentPlayer);
+                }else{
+                    int direction = shapeID - selectedSquare;
+                    if(direction == -11){
+                       direction = 1; 
+                    }
+                    onPlayerMove(selectedSquare,direction);
+                    resetAllSquares();
+                    state = 0;
+                }
+            }
+        }
         
     }
 
-    public void onPlayerMove(){
+    public void onPlayerMove(int selectedSquare, int direction){
         //Son 
         //TODO: Already done on paper, write it back here
     }
@@ -103,38 +131,80 @@ public class MainGameController extends BaseController{
         shape.setEffect(glow);
     }
 
-    private void resetSquare(Rectangle rect){
-        rect.setFill(Color.TRANSPARENT);
-        rect.setEffect(null);
+    private void resetSquare(Shape shape){
+        shape.setFill(Color.TRANSPARENT);
+        shape.setEffect(null);
     }
-        //TODO: check squares state
-    public boolean checkState1(){
+
+    public void resetAllSquares(){
+        for(Shape shape : allOverlays){
+            resetSquare(shape);
+        }
+    }
+    
+    //TODO: check squares state
+    public boolean checkState1(int currentPlayer, int shapeID){
+        if(currentPlayer == 0){
+            if(shapeID < 1 || shapeID > 5){
+                return false;
+            }
+        }else if(currentPlayer == 1){
+            if(shapeID < 7 || shapeID > 11){
+                return false;
+            }
+        }
+        return checkGem(shapeID);
+    }
+    public boolean checkState2(int shapeID){
+        int LeftNeighbour = (shapeID + 1 + 12) % 12;
+        int RightNeighbour = (shapeID - 1 + 12) % 12;
+        if((shapeID == LeftNeighbour && checkGem(LeftNeighbour)) || (shapeID == RightNeighbour && checkGem(RightNeighbour)) || shapeID == selectedSquare){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkGem(int shapeID){
+        String gemAmount = allCells[shapeID].getText();
+        if(Integer.parseInt(gemAmount) == 0){
+            return false;
+        }
         return true;
     }
-    public boolean checkState2(){
-        return true;
-    }
-
-    public void convertToID(){
-
-    }
-    public void highlightMoveOption(int idx){
-        setRedSquare(allOverlays[idx]);
-        
-    }
-
-    public void highlightAvailableSquare(Shape shape,int currentPlayer){
+    public void highlightAvailableSquareState1(Shape shape,int currentPlayer){
         //NAM
         //TODO: Check which player's turn to highlight the correct square
         if(currentPlayer == 0){
             for(int i = 1; i<= 5;i++){
-                setYellowSquare(allOverlays[i]);
+                if(checkGem(i)){
+                    setYellowSquare(allOverlays[i]);
+                }
             }
         }else {
             for(int i = 7; i<= 11;i++){
-                setYellowSquare(allOverlays[i]);
+                if(checkGem(i)){
+                    setYellowSquare(allOverlays[i]);
+                }
             }
         }
     }
 
+    public void highlightAvailableSquareState2(int shapeID){
+        setRedSquare(allOverlays[shapeID]);
+        int LeftNeighbour = (shapeID + 1 + 12) % 12;
+        int RightNeighbour = (shapeID - 1 + 12) % 12;
+        if(checkGem(LeftNeighbour)){
+        setYellowSquare(allOverlays[LeftNeighbour]);
+        }
+        if(checkGem(RightNeighbour)){
+            setYellowSquare(allOverlays[RightNeighbour]);
+        }
+
+    }
+
+    public static int convertStringToInt(String str){
+        str=str.replaceAll("[^0-9]", "");
+        
+        return Integer.parseInt(str);
+    }
 }
