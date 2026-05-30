@@ -3,6 +3,7 @@ package Controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -51,13 +52,15 @@ public class MainGameController extends BaseController{
         
     }
 
-    public void getInput(){
+    public void getInput(MouseEvent event){
         //NAM
         //TODO: Handle player input : Select a square -> then select direction
         //NOTE: Check player's turn for the available squares
         //After getting input, call onPlayerMove(square, direction)
         //called whenever player clicks
         //need to check the state of game
+
+        
     }
 
     public void onPlayerMove(){
