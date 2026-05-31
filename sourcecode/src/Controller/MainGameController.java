@@ -80,7 +80,7 @@ public class MainGameController extends BaseController {
 
     public void getInput(MouseEvent event){
         //NAM
-        //TODO: Handle player input : Select a square -> then select direction
+        //Handle player input : Select a square -> then select direction
         //NOTE: Check player's turn for the available squares
         //After getting input, call onPlayerMove(square, direction)
         //called whenever player clicks
@@ -89,8 +89,6 @@ public class MainGameController extends BaseController {
         String fxid = clickedShape.getId();
         int shapeID = convertStringToInt(fxid);
 
-        
-        
         if(state == 1){
             if(checkState1(game.getCurrentPlayer(), shapeID)){
                 resetAllSquares();
@@ -111,9 +109,6 @@ public class MainGameController extends BaseController {
                        direction = 1; //Case when the selectedSquare = 11 and the direction square is 0
                     }
                     onPlayerMove(selectedSquare,direction);
-                    resetAllSquares();
-                    state = 1;
-                    highlightAvailableSquareState1(game.getCurrentPlayer());
                 }
             }
             
@@ -121,15 +116,22 @@ public class MainGameController extends BaseController {
         
     }
     public void onPlayerMove(int startingSquare, int direction){
+        //IDea: Animation 1 finishes THEN update score and run animation 2 THEN hightlight
+        state = -1;
+        resetAllSquares();
         List<Pair<Integer, Integer>> moveSequence = game.proccessingTurn(startingSquare, direction);
-        animateMoves(moveSequence);
-        updateScoreUI(game.getCurrentPlayer(), game.getPlayers()[game.getCurrentPlayer()].getScore());
+        animateMoves(moveSequence, () -> {
+            updateScoreUI(game.getCurrentPlayer(), game.getPlayers()[game.getCurrentPlayer()].getScore());
 
-        moveSequence = game.postTurnProcessing();
-        animateMoves(moveSequence);
+            List<Pair<Integer, Integer>> fillSequence = game.postTurnProcessing();
+            animateMoves(fillSequence, () -> {
+                state = 1;
+                highlightAvailableSquareState1(game.getCurrentPlayer());
+            });
+        });    
     }
 
-    public void animateMoves(List<Pair<Integer, Integer>> moves) {
+    public void animateMoves(List<Pair<Integer, Integer>> moves, Runnable onFinished) {
         Timeline timeline = new Timeline();
         for (int i = 0; i < moves.size(); i++) {
             Pair<Integer, Integer> step = moves.get(i);
@@ -143,6 +145,7 @@ public class MainGameController extends BaseController {
                 }
             }));
         }
+        timeline.setOnFinished(e -> onFinished.run()); //When timeline finishes, run the code in -> {}
         timeline.play();
     }
     
@@ -209,7 +212,7 @@ public class MainGameController extends BaseController {
 
     public void highlightAvailableSquareState1(int currentPlayer){
         //NAM
-        //TODO: Check which player's turn to highlight the correct square
+        //Check which player's turn to highlight the correct square
         if(currentPlayer == 0){
             for(int i = 1; i<= 5;i++){
                 setYellowSquare(allOverlays[i]);
