@@ -110,10 +110,8 @@ public class MainGameController extends BaseController {
                     }
                     onPlayerMove(selectedSquare,direction);
                 }
-            }
-            
+            }   
         }
-        
     }
     public void onPlayerMove(int startingSquare, int direction){
         //IDea: Animation 1 finishes THEN update score and run animation 2 THEN hightlight
@@ -187,8 +185,11 @@ public class MainGameController extends BaseController {
             resetSquare(shape);
         }
     }
-    //TODO: check squares state
+
     public boolean checkState1(int currentPlayer, int shapeID){
+        if(!hasGem(shapeID)){
+            return false;
+        }
         if(currentPlayer == 0){
             if(shapeID < 1 || shapeID > 5){
                 return false;
@@ -215,11 +216,15 @@ public class MainGameController extends BaseController {
         //Check which player's turn to highlight the correct square
         if(currentPlayer == 0){
             for(int i = 1; i<= 5;i++){
-                setYellowSquare(allOverlays[i]);
+                if(hasGem(i)){
+                    setYellowSquare(allOverlays[i]);
+                }
             }
         }else {
             for(int i = 7; i<= 11;i++){
-                setYellowSquare(allOverlays[i]);
+                if(hasGem(i)){
+                    setYellowSquare(allOverlays[i]);
+                }
             }
         }
     }
@@ -237,5 +242,13 @@ public class MainGameController extends BaseController {
         str=str.replaceAll("[^0-9]", "");
         
         return Integer.parseInt(str);
+    }
+
+    public boolean hasGem(int shapeID){
+        String gemAmount = allCells[shapeID].getText();
+        if(Integer.parseInt(gemAmount) == 0){
+            return false;
+        }
+        return true;
     }
 }
