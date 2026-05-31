@@ -28,13 +28,12 @@ public class MainGameController extends BaseController {
     @FXML private ImageView avatarP1, avatarP2;
     @FXML private Label[] allCells;
     @FXML private Shape[] allOverlays;
-
-    private Game game;
-    private static final Duration STEP_DELAY = Duration.millis(1000); // tweak speed here
     @FXML private Rectangle overlay1, overlay2, overlay3, overlay4, overlay5, overlay7, overlay8, overlay9, overlay10, overlay11;
     @FXML private Arc overlay0, overlay6;
 
-    private int state = 0;
+    private Game game;
+    private static final Duration STEP_DELAY = Duration.millis(700); // tweak speed here
+    private int state = 1;
     private int selectedSquare = -1;
 
     @FXML
@@ -57,6 +56,8 @@ public class MainGameController extends BaseController {
     
         scoreP1.setText("Score: 0");
         scoreP2.setText("Score: 0");
+        
+        highlightAvailableSquareState1(game.getCurrentPlayer());
         initializePlayerData();
     }
 
@@ -87,40 +88,45 @@ public class MainGameController extends BaseController {
         Shape clickedShape = (Shape) event.getSource();
         String fxid = clickedShape.getId();
         int shapeID = convertStringToInt(fxid);
-        System.out.println(shapeID);
 
-        /* 
+        
+        
         if(state == 1){
-            if(checkState1(currentPlayer, shapeID)){
-                state = 2;
+            if(checkState1(game.getCurrentPlayer(), shapeID)){
                 resetAllSquares();
                 highlightAvailableSquareState2(shapeID);
                 selectedSquare = shapeID; 
+                state = 2;
             }
         }
-        if(state == 2){
+        else if(state == 2){
             if(checkState2(shapeID)){
                 if(shapeID == selectedSquare){
                     state = 1;
                     resetAllSquares();
-                    highlightAvailableSquareState1(clickedShape, currentPlayer);
+                    highlightAvailableSquareState1(game.getCurrentPlayer());
                 }else{
                     int direction = shapeID - selectedSquare;
                     if(direction == -11){
-                       direction = 1; 
+                       direction = 1; //Case when the selectedSquare = 11 and the direction square is 0
                     }
                     onPlayerMove(selectedSquare,direction);
                     resetAllSquares();
-                    state = 0;
+                    state = 1;
+                    highlightAvailableSquareState1(game.getCurrentPlayer());
                 }
             }
             
         }
-        */
         
     }
-    public void onPlayerMove(int selectedSquare, int direction){
-        
+    public void onPlayerMove(int startingSquare, int direction){
+        List<Pair<Integer, Integer>> moveSequence = game.proccessingTurn(startingSquare, direction);
+        animateMoves(moveSequence);
+        updateScoreUI(game.getCurrentPlayer(), game.getPlayers()[game.getCurrentPlayer()].getScore());
+
+        moveSequence = game.postTurnProcessing();
+        animateMoves(moveSequence);
     }
 
     public void animateMoves(List<Pair<Integer, Integer>> moves) {
@@ -192,8 +198,8 @@ public class MainGameController extends BaseController {
         return true;
     }
     public boolean checkState2(int shapeID){
-        int LeftNeighbour = (shapeID + 1 + 12) % 12;
-        int RightNeighbour = (shapeID - 1 + 12) % 12;
+        int LeftNeighbour = (selectedSquare + 1 + 12) % 12;
+        int RightNeighbour = (selectedSquare - 1 + 12) % 12;
         if(shapeID == LeftNeighbour || shapeID == RightNeighbour || shapeID == selectedSquare){
             return true;
         }
@@ -201,7 +207,7 @@ public class MainGameController extends BaseController {
     }
 
 
-    public void highlightAvailableSquareState1(Shape shape,int currentPlayer){
+    public void highlightAvailableSquareState1(int currentPlayer){
         //NAM
         //TODO: Check which player's turn to highlight the correct square
         if(currentPlayer == 0){

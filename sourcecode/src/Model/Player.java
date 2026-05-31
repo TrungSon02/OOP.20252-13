@@ -3,9 +3,9 @@ import java.util.Random;
 
 public class Player {
     private String name;    
-    private double score;
+    private int score;
     private String avatar;
-    private static int NumberTaken;
+
     static final String[] PLAYER_ADJECTIVES = {"Hungry", "Brave", "Cunning", "Swift", "Almighty", "Wise", "Fierce", "Smart", "Quick"};
     static final String[] PLAYER_NOUN = {"Hippo", "Giraffe", "Elephant", "Lion","Tiger", "Bear", "Wolf", "Fox", "Eagle", "Shark","Sloth","Turtle","Pattrick","Banana","Chongus",};
     
@@ -34,7 +34,7 @@ public class Player {
         return avatar;
     }
 
-    public double getScore() {
+    public int getScore() {
         return score;
     }
 
