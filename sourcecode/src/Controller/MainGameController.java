@@ -3,74 +3,102 @@ package Controller;
 import java.util.List;
 
 import Model.Game;
+import View.GemRenderer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Pair;
-import javafx.util.Duration;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
+import javafx.util.Pair;
 
-public class MainGameController extends BaseController {
+/**
+ * Glue between the FXML view and the {@link Game} model.
+ * Responsibilities are now narrow: wire up the scene, react to {@link InputHandler}
+ * events (highlighting + kicking off moves), animate the model's move sequences,
+ * and ask {@link GemRenderer} to paint gems. It holds no game rules and reads all
+ * board/player state from {@code Game}.
+ */
+public class MainGameController extends BaseController implements InputHandler.Listener {
 
     @FXML private Label labelPlayer1, labelPlayer2;
-
     @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
-    @FXML private Label labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11;   
+    @FXML private Label labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11;
     @FXML private Label scoreP1, scoreP2;
     @FXML private ImageView avatarP1, avatarP2;
-    @FXML private Label[] allCells;
-    @FXML private Shape[] allOverlays;
+
     @FXML private Rectangle overlay1, overlay2, overlay3, overlay4, overlay5, overlay7, overlay8, overlay9, overlay10, overlay11;
     @FXML private Arc overlay0, overlay6;
 
+    @FXML private StackPane cellPane0, cellPane1, cellPane2, cellPane3, cellPane4, cellPane5;
+    @FXML private StackPane cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11;
+
+    private Label[] allCells;
+    private Shape[] allOverlays;
+    private StackPane[] allCellPanes;
+
     private Game game;
+    private InputHandler inputHandler;
+    private GemRenderer gemRenderer;
+
+    private static final int CELL_COUNT = 12;
     private static final Duration STEP_DELAY = Duration.millis(700); // tweak speed here
-    private int state = 1;
-    private int selectedSquare = -1;
 
     @FXML
     public void initialize() {
         this.game = new Game();
-        allCells = new Label[]{
-                labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
-                labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
-            };
 
+        allCells = new Label[]{
+            labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5,
+            labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
+        };
         allOverlays = new Shape[]{
             overlay0, overlay1, overlay2, overlay3, overlay4, overlay5,
             overlay6, overlay7, overlay8, overlay9, overlay10, overlay11
         };
-        
+        allCellPanes = new StackPane[]{
+            cellPane0, cellPane1, cellPane2, cellPane3, cellPane4, cellPane5,
+            cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11
+        };
 
-        for (int i = 0; i <= 11; i++) {
-            allCells[i].setText("5");
-        }
-    
-        scoreP1.setText("Score: 0");
-        scoreP2.setText("Score: 0");
-        
-        highlightAvailableSquareState1(game.getCurrentPlayer());
+        // Collaborators
+        inputHandler = new InputHandler(game, this);
+
+        boolean[] bigCell = new boolean[CELL_COUNT];
+        for (int i = 0; i < CELL_COUNT; i++) bigCell[i] = game.isCastleSquare(i);
+        gemRenderer = new GemRenderer(allCellPanes, allCells, bigCell);
+
+        // Initial view from the model
+        syncCellLabels();
+        refreshScores();
         initializePlayerData();
+        highlightSelectable();
+
+        // Draw gems after the first layout pass, when cells have a real size
+        Platform.runLater(() -> {
+            if (cellPane1 != null && cellPane1.getScene() != null) {
+                cellPane1.getScene().getRoot().applyCss();
+                cellPane1.getScene().getRoot().layout();
+            }
+            gemRenderer.renderAll(game.getBoardSnapshot());
+        });
     }
 
     private void initializePlayerData() {
-        labelPlayer1.setText("Player " + game.getPlayers()[0].getName());
-        labelPlayer2.setText("Player " + game.getPlayers()[1].getName());
-        String avatarPathP1 = game.getPlayers()[0].getAvatar();
-        String avatarPathP2 = game.getPlayers()[1].getAvatar();
-        
+        labelPlayer1.setText("Player " + game.getPlayerName(0));
+        labelPlayer2.setText("Player " + game.getPlayerName(1));
         try {
-            Image imgPlayer1 = new Image(getClass().getResourceAsStream(avatarPathP1));
-            Image imgPlayer2 = new Image(getClass().getResourceAsStream(avatarPathP2));
-            
+            Image imgPlayer1 = new Image(getClass().getResourceAsStream(game.getPlayerAvatar(0)));
+            Image imgPlayer2 = new Image(getClass().getResourceAsStream(game.getPlayerAvatar(1)));
             if (avatarP1 != null) avatarP1.setImage(imgPlayer1);
             if (avatarP2 != null) avatarP2.setImage(imgPlayer2);
         } catch (Exception e) {
@@ -78,58 +106,51 @@ public class MainGameController extends BaseController {
         }
     }
 
-    public void getInput(MouseEvent event){
-        //NAM
-        //Handle player input : Select a square -> then select direction
-        //NOTE: Check player's turn for the available squares
-        //After getting input, call onPlayerMove(square, direction)
-        //called whenever player clicks
-        //need to check the state of game
-        Shape clickedShape = (Shape) event.getSource();
-        String fxid = clickedShape.getId();
-        int shapeID = convertStringToInt(fxid);
+    // ---------------- Input: just forward the clicked cell to the handler ----------------
 
-        if(state == 1){
-            if(checkState1(game.getCurrentPlayer(), shapeID)){
-                resetAllSquares();
-                highlightAvailableSquareState2(shapeID);
-                selectedSquare = shapeID; 
-                state = 2;
-            }
-        }
-        else if(state == 2){
-            if(checkState2(shapeID)){
-                if(shapeID == selectedSquare){
-                    state = 1;
-                    resetAllSquares();
-                    highlightAvailableSquareState1(game.getCurrentPlayer());
-                }else{
-                    int direction = shapeID - selectedSquare;
-                    if(direction == -11){
-                       direction = 1; //Case when the selectedSquare = 11 and the direction square is 0
-                    }
-                    onPlayerMove(selectedSquare,direction);
-                }
-            }   
-        }
+    public void getInput(MouseEvent event) {
+        Shape clicked = (Shape) event.getSource();
+        int cell = convertStringToInt(clicked.getId()); // e.g. "overlay3" -> 3
+        inputHandler.handleClick(cell);
     }
-    public void onPlayerMove(int startingSquare, int direction){
-        //IDea: Animation 1 finishes THEN update score and run animation 2 THEN hightlight
-        state = -1;
+
+    // ---------------- InputHandler.Listener ----------------
+
+    @Override
+    public void onSourceSelected(int square) {
+        resetAllSquares();
+        setRedSquare(allOverlays[square]);
+        setYellowSquare(allOverlays[(square + 1) % CELL_COUNT]);
+        setYellowSquare(allOverlays[(square - 1 + CELL_COUNT) % CELL_COUNT]);
+    }
+
+    @Override
+    public void onSelectionCleared() {
+        highlightSelectable();
+    }
+
+    @Override
+    public void onMoveRequested(int startingSquare, int direction) {
         resetAllSquares();
         List<Pair<Integer, Integer>> moveSequence = game.proccessingTurn(startingSquare, direction);
         animateMoves(moveSequence, () -> {
-            updateScoreUI(game.getCurrentPlayer(), game.getPlayers()[game.getCurrentPlayer()].getScore());
-
+            refreshScores();
             List<Pair<Integer, Integer>> fillSequence = game.postTurnProcessing();
             animateMoves(fillSequence, () -> {
-                state = 1;
-                highlightAvailableSquareState1(game.getCurrentPlayer());
+                refreshScores();
+                if (game.isFinished()) {
+                    // Game over — board left as-is. Hook here to navigate to the ending screen.
+                    return;
+                }
+                inputHandler.unlock();
+                highlightSelectable();
             });
-        });    
+        });
     }
 
-    public void animateMoves(List<Pair<Integer, Integer>> moves, Runnable onFinished) {
+    // ---------------- Animation ----------------
+
+    private void animateMoves(List<Pair<Integer, Integer>> moves, Runnable onFinished) {
         Timeline timeline = new Timeline();
         for (int i = 0; i < moves.size(); i++) {
             Pair<Integer, Integer> step = moves.get(i);
@@ -138,117 +159,68 @@ public class MainGameController extends BaseController {
             Duration when = STEP_DELAY.multiply(i + 1);
 
             timeline.getKeyFrames().add(new KeyFrame(when, e -> {
-                if (allCells[cellIndex] != null) {  // this line is a safety check
-                    allCells[cellIndex].setText(String.valueOf(newValue));// actual action here
+                if (allCells[cellIndex] != null) {
+                    allCells[cellIndex].setText(String.valueOf(newValue));
                 }
+                gemRenderer.render(cellIndex, newValue); // keep gems in sync with the count
             }));
         }
-        timeline.setOnFinished(e -> onFinished.run()); //When timeline finishes, run the code in -> {}
+        timeline.setOnFinished(e -> onFinished.run());
         timeline.play();
     }
-    
-    public void updateScoreUI(int playerIndex, int score){
-        //Hieu Anh
-        //TODO: Based on the param, Update the score Label for the given player
-            if (playerIndex == 0) {
-            scoreP1.setText("Score: " + score);
-        } else {
-            scoreP2.setText("Score: " + score);
+
+    // ---------------- View helpers (read state from the model) ----------------
+
+    private void syncCellLabels() {
+        int[] counts = game.getBoardSnapshot();
+        for (int i = 0; i < allCells.length; i++) {
+            if (allCells[i] != null) allCells[i].setText(String.valueOf(counts[i]));
         }
     }
 
-    private void setYellowSquare(Shape shape){
-        shape.setFill(Color.rgb(255, 255, 0, 0.15)); 
+    private void refreshScores() {
+        scoreP1.setText("Score: " + game.getPlayerScore(0));
+        scoreP2.setText("Score: " + game.getPlayerScore(1));
+    }
+
+    /** Highlight every square the current player can currently start a move from. */
+    private void highlightSelectable() {
+        resetAllSquares();
+        int from = (game.getCurrentPlayer() == 0) ? 1 : 7;
+        for (int i = from; i <= from + 4; i++) {
+            if (game.getGemCount(i) > 0) {
+                setYellowSquare(allOverlays[i]);
+            }
+        }
+    }
+
+    private void setYellowSquare(Shape shape) {
+        shape.setFill(Color.rgb(255, 255, 0, 0.15));
+        shape.setEffect(glow(Color.YELLOW));
+    }
+
+    private void setRedSquare(Shape shape) {
+        shape.setFill(Color.rgb(255, 0, 0, 0.15));
+        shape.setEffect(glow(Color.RED));
+    }
+
+    private DropShadow glow(Color color) {
         DropShadow glow = new DropShadow();
-        glow.setColor(Color.YELLOW);
+        glow.setColor(color);
         glow.setRadius(50);
         glow.setSpread(0.7);
-        shape.setEffect(glow);
+        return glow;
     }
 
-    private void setRedSquare(Shape shape){
-        shape.setFill(Color.rgb(255, 0, 0, 0.15)); 
-        DropShadow glow = new DropShadow();
-        glow.setColor(Color.RED);
-        glow.setRadius(50);
-        glow.setSpread(0.7);
-        shape.setEffect(glow);
-    }
-
-    private void resetSquare(Shape shape){
-        shape.setFill(Color.TRANSPARENT);
-        shape.setEffect(null);
-    }
-
-    public void resetAllSquares(){
-        for(Shape shape : allOverlays){
-            resetSquare(shape);
+    private void resetAllSquares() {
+        for (Shape shape : allOverlays) {
+            shape.setFill(Color.TRANSPARENT);
+            shape.setEffect(null);
         }
     }
 
-    public boolean checkState1(int currentPlayer, int shapeID){
-        if(!hasGem(shapeID)){
-            return false;
-        }
-        if(currentPlayer == 0){
-            if(shapeID < 1 || shapeID > 5){
-                return false;
-            }
-        }else if(currentPlayer == 1){
-            if(shapeID < 7 || shapeID > 11){
-                return false;
-            }
-        }
-        return true;
-    }
-    public boolean checkState2(int shapeID){
-        int LeftNeighbour = (selectedSquare + 1 + 12) % 12;
-        int RightNeighbour = (selectedSquare - 1 + 12) % 12;
-        if(shapeID == LeftNeighbour || shapeID == RightNeighbour || shapeID == selectedSquare){
-            return true;
-        }
-        return false;
-    }
-
-
-    public void highlightAvailableSquareState1(int currentPlayer){
-        //NAM
-        //Check which player's turn to highlight the correct square
-        if(currentPlayer == 0){
-            for(int i = 1; i<= 5;i++){
-                if(hasGem(i)){
-                    setYellowSquare(allOverlays[i]);
-                }
-            }
-        }else {
-            for(int i = 7; i<= 11;i++){
-                if(hasGem(i)){
-                    setYellowSquare(allOverlays[i]);
-                }
-            }
-        }
-    }
-
-    public void highlightAvailableSquareState2(int shapeID){
-        setRedSquare(allOverlays[shapeID]);
-        int LeftNeighbour = (shapeID + 1 + 12) % 12;
-        int RightNeighbour = (shapeID - 1 + 12) % 12;
-        setYellowSquare(allOverlays[LeftNeighbour]);
-        setYellowSquare(allOverlays[RightNeighbour]);
-
-    }
-
-    public static int convertStringToInt(String str){
-        str=str.replaceAll("[^0-9]", "");
-        
+    public static int convertStringToInt(String str) {
+        str = str.replaceAll("[^0-9]", "");
         return Integer.parseInt(str);
-    }
-
-    public boolean hasGem(int shapeID){
-        String gemAmount = allCells[shapeID].getText();
-        if(Integer.parseInt(gemAmount) == 0){
-            return false;
-        }
-        return true;
     }
 }

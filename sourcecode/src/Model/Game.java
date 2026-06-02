@@ -1,6 +1,7 @@
 package Model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javafx.util.Pair;
@@ -15,7 +16,7 @@ public class Game {
         players = new Player[2];
         players[0] = new Player(0);
         players[1] = new Player(1);
-        this.board = new Board(); 
+        this.board = new Board();
         this.currentPlayer = 0;
         this.isFinished = false;
     }
@@ -25,28 +26,25 @@ public class Game {
         int totalCaptured = 0;
         int currentIndex = stopIndex;
         int[] table = board.getTable();
-
         while (true) {
             int emptyIdx = Math.floorMod(currentIndex + direction, 12);
             int targetIdx = Math.floorMod(emptyIdx + direction, 12);
-
             if (table[emptyIdx] == 0 && table[targetIdx] > 0) {
-                int capturedGems = table[targetIdx]; 
-                board.clearSquare(targetIdx); 
+                int capturedGems = table[targetIdx];
+                board.clearSquare(targetIdx);
                 totalCaptured += capturedGems;
-                
+
                 captureMoves.add(new Pair<>(targetIdx, 0));
-                
+
                 currentIndex = targetIdx;
             } else {
                 break;
             }
         }
-
         if (totalCaptured > 0) {
             players[currentPlayer].updateScore(totalCaptured);
         }
-        
+
         return captureMoves;
     }
 
@@ -76,10 +74,7 @@ public class Game {
         return this.players;
     }
 
-    
     public List<Pair<Integer, Integer>> proccessingTurn(int startIndex, int direction){
-        //Implement this method: Call moveGem -> Call handle capture
-        //return: A complete sequence of moves from the start to the end (combine the existing moves in moveGem with new captured moves)
         List<Pair<Integer, Integer>> moveSequence = board.moveGem(startIndex, direction);
         if (moveSequence != null && !moveSequence.isEmpty()) {
             int stopIndex = moveSequence.get(moveSequence.size() - 1).getKey();
@@ -90,12 +85,10 @@ public class Game {
     }
 
     public List<Pair<Integer, Integer>> postTurnProcessing(){
-        //Call checkEnding method from Board and update isFinished if needed, if game still continues, call checkEmpty from Board -> call fillGem if empty -> Switch players
-        //If we need to fill empty square, return a list of moves. Else return an empty list
         List<Pair<Integer, Integer>> fillMoves = new ArrayList<>();
         if (board.checkEnding()) {
             this.isFinished = true;
-            return fillMoves; 
+            return fillMoves;
         }
         int emptyPlayer = board.checkEmpty();
         if (emptyPlayer != -1) {
@@ -109,4 +102,36 @@ public class Game {
         switchPlayer();
         return fillMoves;
     }
+
+    // ---------------- Read-only queries for the View/Controller (MVC) ----------------
+    // These let the controller work against Game alone, without reaching into Board or Player.
+
+    /** Number of gems currently in a square (0 if out of range). */
+    public int getGemCount(int square) {
+        int[] table = board.getTable();
+        if (square < 0 || square >= table.length) return 0;
+        return table[square];
+    }
+
+    /** Defensive copy of the whole board, for rendering. */
+    public int[] getBoardSnapshot() {
+        int[] table = board.getTable();
+        return Arrays.copyOf(table, table.length);
+    }
+
+    /** True for the two big "castle" cells. */
+    public boolean isCastleSquare(int square) {
+        return square == 0 || square == 6;
+    }
+
+    /** Whether the current player may start a move from this square. */
+    public boolean canSelectSource(int square) {
+        if (getGemCount(square) <= 0) return false;
+        if (currentPlayer == 0) return square >= 1 && square <= 5;
+        return square >= 7 && square <= 11;
+    }
+
+    public String getPlayerName(int index)   { return players[index].getName(); }
+    public int    getPlayerScore(int index)  { return players[index].getScore(); }
+    public String getPlayerAvatar(int index) { return players[index].getAvatar(); }
 }
