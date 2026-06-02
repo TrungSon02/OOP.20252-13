@@ -107,8 +107,8 @@
 
 .instruction-body {
     -fx-text-fill: #FFD700;
-    -fx-font-family: "Xirod";
-    -fx-font-size: 14px;
+    -fx-font-family: "Super Maples";
+    -fx-font-size: 28px;
     -fx-padding: 20;
     -fx-wrap-text: true;
     -fx-max-width: infinity;
@@ -138,7 +138,7 @@
     -fx-font-family: "Xirod";
     -fx-font-size: 24px;
     -fx-text-fill: #631A11;
-    -fx-padding: 30 0 30 0;
+    -fx-padding: 10 0 10 0;
 }
 
 .score-label{

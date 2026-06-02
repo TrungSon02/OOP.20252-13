@@ -12,9 +12,9 @@
 
 <BorderPane styleClass="game-background" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainGameController">
    <top>
-      <HBox alignment="CENTER">
+      <HBox alignment="CENTER" >
          <children>
-            <HBox alignment="CENTER_LEFT" prefWidth="200" style="-fx-padding: 0 0 0 30;" HBox.hgrow="ALWAYS">
+            <HBox alignment="TOP_LEFT" prefWidth="200" style="-fx-padding: 20 0 0 20;" HBox.hgrow="ALWAYS">
                <children>
                   <Button onAction="#goHome" styleClass="exit-small-button" />
                   <Button styleClass="music-button" />
@@ -24,8 +24,8 @@
             <VBox alignment="CENTER">
                <children>
                   <Label fx:id="labelPlayer1" styleClass="name-label" text="Player 1" />
-                  <StackPane maxWidth="120.0" styleClass="avatar-frame">
-                     <ImageView fx:id="avatarP1" fitHeight="120.0" fitWidth="120.0" preserveRatio="false" />
+                  <StackPane maxWidth="110.0" styleClass="avatar-frame">
+                     <ImageView fx:id="avatarP1" fitHeight="110.0" fitWidth="110.0" preserveRatio="false" />
                   </StackPane>
                </children>
             </VBox>
@@ -145,8 +145,8 @@
             <VBox alignment="CENTER_LEFT" prefWidth="200" HBox.hgrow="ALWAYS" />
             <VBox alignment="CENTER">
                <children>
-                  <StackPane maxWidth="120.0" styleClass="avatar-frame">
-                     <ImageView fx:id="avatarP2" fitHeight="120.0" fitWidth="120.0" preserveRatio="false" />
+                  <StackPane maxWidth="110.0" styleClass="avatar-frame">
+                     <ImageView fx:id="avatarP2" fitHeight="110.0" fitWidth="110.0" preserveRatio="false" />
                   </StackPane>
                   <Label fx:id="labelPlayer2" styleClass="name-label" text="Player 2" />
                </children>
