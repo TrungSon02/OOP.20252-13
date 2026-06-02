@@ -144,7 +144,7 @@
 .score-label{
     -fx-font-family: "Xirod";
     -fx-font-size: 24px;
-    -fx-text-fill: #631A11;
+    -fx-text-fill: #FFF5E0;
     -fx-background-image: url("/image/layout/scoreboard.png");
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
