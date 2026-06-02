@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Random;
 
 import Model.Game;
+import View.BaseGem;
+import View.BigGem;
+import View.SmallGem;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -18,7 +21,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
@@ -36,23 +38,18 @@ public class MainGameController extends BaseController {
     @FXML private Rectangle overlay1, overlay2, overlay3, overlay4, overlay5, overlay7, overlay8, overlay9, overlay10, overlay11;
     @FXML private Arc overlay0, overlay6;
 
-    // NEW: the StackPane wrapping each cell — this is the container we draw marbles into.
+    // The StackPane wrapping each cell — this is the container we draw gems into.
     @FXML private StackPane cellPane0, cellPane1, cellPane2, cellPane3, cellPane4, cellPane5;
     @FXML private StackPane cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11;
 
     private Label[] allCells;
     private Shape[] allOverlays;
 
-    // NEW: marble rendering support
+    // Gem rendering support
     private StackPane[] allCellPanes;
-    private Pane[] cellPiles; // one transparent layer per cell that holds its marbles
-    private static final double MARBLE_RADIUS = 7.0;
-    private static final int MARBLES_PER_ROW = 4;
-    private static final Color[] MARBLE_COLORS = new Color[] {
-        Color.web("#E8C547"), Color.web("#D64545"), Color.web("#3FA34D"),
-        Color.web("#3A86FF"), Color.web("#F5F5DC"), Color.web("#A06CD5")
-    };
-    private final Random rng = new Random();
+    private Pane[] cellPiles; // one transparent layer per cell that holds its gems
+    private static final int GEMS_PER_ROW = 4;
+    private final Random rng = new Random(); // used only for slight positional jitter
 
     private Game game;
     private static final Duration STEP_DELAY = Duration.millis(700); // tweak speed here
@@ -72,7 +69,7 @@ public class MainGameController extends BaseController {
             overlay6, overlay7, overlay8, overlay9, overlay10, overlay11
         };
 
-        // NEW: collect the StackPanes so we can draw marbles into each cell
+        // Collect the StackPanes so we can draw gems into each cell
         allCellPanes = new StackPane[]{
             cellPane0, cellPane1, cellPane2, cellPane3, cellPane4, cellPane5,
             cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11
@@ -89,13 +86,13 @@ public class MainGameController extends BaseController {
         highlightAvailableSquareState1(game.getCurrentPlayer());
         initializePlayerData();
 
-        // NEW: draw marbles after the first layout pass, so the cells already have a real size
+        // Draw gems after the first layout pass, so the cells already have a real size
         Platform.runLater(() -> {
             if (cellPane1 != null && cellPane1.getScene() != null) {
                 cellPane1.getScene().getRoot().applyCss();
                 cellPane1.getScene().getRoot().layout();
             }
-            renderAllMarbles();
+            renderAllGems();
         });
     }
 
@@ -173,7 +170,7 @@ public class MainGameController extends BaseController {
                 if (allCells[cellIndex] != null) {  // this line is a safety check
                     allCells[cellIndex].setText(String.valueOf(newValue));// actual action here
                 }
-                renderMarblesInCell(cellIndex, newValue); // NEW: keep marbles in sync with the count
+                renderGemsInCell(cellIndex, newValue); // keep gems in sync with the count
             }));
         }
         timeline.setOnFinished(e -> onFinished.run()); //When timeline finishes, run the code in -> {}
@@ -279,42 +276,99 @@ public class MainGameController extends BaseController {
         return true;
     }
 
-    // ---------------- NEW: marble rendering ----------------
+    // ---------------- Gem rendering ----------------
 
-    /** Redraw the marbles in every cell from the current label values. */
-    private void renderAllMarbles() {
+    /** The two "castle" arc cells hold the immovable big gem (quan); all other cells hold small gems. */
+    private boolean isBigCell(int cellIndex) {
+        return cellIndex == 0 || cellIndex == 6;
+    }
+
+    /** Redraw the gems in every cell from the current label values. */
+    private void renderAllGems() {
         for (int i = 0; i < allCellPanes.length; i++) {
-            renderMarblesInCell(i, parseCount(allCells[i]));
+            renderGemsInCell(i, parseCount(allCells[i]));
         }
     }
 
-    /** Draw `count` marbles inside cell `cellIndex`, replacing whatever was there before. */
-    private void renderMarblesInCell(int cellIndex, int count) {
+    /** Draw the gems for cell `cellIndex` given its current `count`, replacing whatever was there before. */
+    private void renderGemsInCell(int cellIndex, int count) {
         if (cellIndex < 0 || cellIndex >= allCellPanes.length) return;
         if (allCellPanes[cellIndex] == null) return;
 
         Pane pile = ensurePile(cellIndex);
         pile.getChildren().clear();
-        for (int i = 0; i < count; i++) {
-            pile.getChildren().add(makeMarble(cellIndex, i));
+
+        Bounds cb = allCellPanes[cellIndex].getLayoutBounds();
+        double cellW = cb.getWidth()  > 0 ? cb.getWidth()  : 150;
+        double cellH = cb.getHeight() > 0 ? cb.getHeight() : 150;
+
+        if (isBigCell(cellIndex)) {
+            renderCastle(pile, count, cellW, cellH);
+        } else {
+            // Small square: every gem here is, and stays, a small gem.
+            for (int i = 0; i < count; i++) {
+                SmallGem gem = new SmallGem();
+                placeInGrid(gem, i, GEMS_PER_ROW, cellW / 2.0, cellH / 2.0 - SmallGem.RADIUS * 2.2);
+                pile.getChildren().add(gem);
+            }
         }
+
         if (allCells[cellIndex] != null) {
-            allCells[cellIndex].toFront(); // keep the number readable on top of the marbles
+            allCells[cellIndex].toFront(); // keep the number readable on top of the gems
         }
     }
 
-    /** Lazily create a transparent layer inside the cell's StackPane that holds the marbles. */
+    /**
+     * A castle shows exactly ONE big gem (the quan), worth {@link BigGem#VALUE}, which never moves.
+     * Any small gems that have travelled in from the small squares stay small and pile up beside it.
+     *
+     * The model stores a castle's count as: 5 (the quan) + however many small gems landed there.
+     * So count >= 5 means the quan is still present; count == 0 means it has been captured.
+     */
+    private void renderCastle(Pane pile, int count, double cellW, double cellH) {
+        boolean quanPresent = count >= BigGem.VALUE;
+        int smallCount = quanPresent ? count - BigGem.VALUE : count;
+
+        if (quanPresent) {
+            BigGem quan = new BigGem();
+            quan.setLayoutX(cellW / 2.0);   // centered, and never repositioned by a move
+            quan.setLayoutY(cellH / 2.0);
+            pile.getChildren().add(quan);
+        }
+
+        // Small gems collect just below the quan.
+        double topY = cellH / 2.0 + BigGem.RADIUS + SmallGem.RADIUS;
+        for (int i = 0; i < smallCount; i++) {
+            SmallGem gem = new SmallGem();
+            placeInGrid(gem, i, GEMS_PER_ROW, cellW / 2.0, topY);
+            pile.getChildren().add(gem);
+        }
+    }
+
+    /** Place `gem` at slot `idx` of a centered grid (center column = `centerX`, first row at `topY`). */
+    private void placeInGrid(BaseGem gem, int idx, int perRow, double centerX, double topY) {
+        double spacing = gem.getRadius() * 2.2;
+        int row = idx / perRow;
+        int col = idx % perRow;
+        double startX = centerX - (perRow - 1) * spacing / 2.0;
+        double jitterX = (rng.nextDouble() - 0.5) * 3;
+        double jitterY = (rng.nextDouble() - 0.5) * 3;
+        gem.setLayoutX(startX + col * spacing + jitterX);
+        gem.setLayoutY(topY + row * spacing + jitterY);
+    }
+
+    /** Lazily create a transparent layer inside the cell's StackPane that holds the gems. */
     private Pane ensurePile(int cellIndex) {
         if (cellPiles[cellIndex] != null) return cellPiles[cellIndex];
 
         Pane pile = new Pane();
         pile.setMouseTransparent(true);  // never intercept clicks meant for the overlay/cell
         pile.setPickOnBounds(false);
-        pile.setManaged(false);          // we position marbles by absolute coords, so don't let StackPane re-center this layer
+        pile.setManaged(false);          // we position gems by absolute coords, so don't let StackPane re-center this layer
         cellPiles[cellIndex] = pile;
 
         StackPane sp = allCellPanes[cellIndex];
-        // Insert just below the count label so the number stays on top of the marbles
+        // Insert just below the count label so the number stays on top of the gems
         int labelIdx = sp.getChildren().indexOf(allCells[cellIndex]);
         if (labelIdx >= 0) {
             sp.getChildren().add(labelIdx, pile);
@@ -322,31 +376,6 @@ public class MainGameController extends BaseController {
             sp.getChildren().add(pile);
         }
         return pile;
-    }
-
-    /** Build a single marble, positioned in a centered grid pattern inside the cell. */
-    private Circle makeMarble(int cellIndex, int idx) {
-        Circle marble = new Circle(MARBLE_RADIUS, MARBLE_COLORS[rng.nextInt(MARBLE_COLORS.length)]);
-        marble.setStroke(Color.color(0, 0, 0, 0.35));
-        marble.setStrokeWidth(1);
-
-        Bounds cb = allCellPanes[cellIndex].getLayoutBounds();
-        double cellW = cb.getWidth()  > 0 ? cb.getWidth()  : 150;
-        double cellH = cb.getHeight() > 0 ? cb.getHeight() : 150;
-
-        int row = idx / MARBLES_PER_ROW;
-        int col = idx % MARBLES_PER_ROW;
-
-        double spacing = MARBLE_RADIUS * 2.2;
-        double startX = cellW / 2.0 - (MARBLES_PER_ROW - 1) * spacing / 2.0;
-        double startY = cellH / 2.0 - spacing;
-
-        double jitterX = (rng.nextDouble() - 0.5) * 3;
-        double jitterY = (rng.nextDouble() - 0.5) * 3;
-
-        marble.setLayoutX(startX + col * spacing + jitterX);
-        marble.setLayoutY(startY + row * spacing + jitterY);
-        return marble;
     }
 
     /** Safely parse a label's text as an int, returns 0 if it can't. */
