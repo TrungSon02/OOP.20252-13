@@ -32,7 +32,10 @@ public class Game {
 
             if (table[emptyIdx] == 0 && table[targetIdx] > 0) {
                 int capturedGems = table[targetIdx]; 
-                board.clearSquare(targetIdx); 
+                board.clearSquare(targetIdx);
+                if(targetIdx == 0 || targetIdx == 6){
+                    board.removeBigGem(targetIdx % 5);
+                } 
                 totalCaptured += capturedGems;
                 
                 captureMoves.add(new Pair<>(targetIdx, 0));
@@ -108,5 +111,9 @@ public class Game {
         }
         switchPlayer();
         return fillMoves;
+    }
+
+    public boolean checkBigGemExistence(int id){
+        return board.getBigGem(id % 5);
     }
 }

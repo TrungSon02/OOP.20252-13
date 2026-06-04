@@ -1,7 +1,9 @@
 package Controller;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import Model.Game;
 import View.BaseGem;
@@ -27,6 +29,7 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 
 public class MainGameController extends BaseController {
+    private Game games;
 
     @FXML private Label labelPlayer1, labelPlayer2;
 
@@ -55,6 +58,10 @@ public class MainGameController extends BaseController {
     private static final Duration STEP_DELAY = Duration.millis(700); // tweak speed here
     private int state = 1;
     private int selectedSquare = -1;
+    @FXML
+public void initializes() {
+    game = new Game();  // controller owns the Game instance
+}
 
     @FXML
     public void initialize() {
@@ -303,7 +310,7 @@ public class MainGameController extends BaseController {
         double cellH = cb.getHeight() > 0 ? cb.getHeight() : 150;
 
         if (isBigCell(cellIndex)) {
-            renderCastle(pile, count, cellW, cellH);
+            renderCastle(pile, cellIndex, count, cellW, cellH);
         } else {
             // Small square: every gem here is, and stays, a small gem.
             for (int i = 0; i < count; i++) {
@@ -325,8 +332,9 @@ public class MainGameController extends BaseController {
      * The model stores a castle's count as: 5 (the quan) + however many small gems landed there.
      * So count >= 5 means the quan is still present; count == 0 means it has been captured.
      */
-    private void renderCastle(Pane pile, int count, double cellW, double cellH) {
-        boolean quanPresent = count >= BigGem.VALUE;
+    private void renderCastle(Pane pile, int cellIndex, int count, double cellW, double cellH) {
+    
+    boolean quanPresent = game.checkBigGemExistence(cellIndex);
         int smallCount = quanPresent ? count - BigGem.VALUE : count;
 
         if (quanPresent) {
