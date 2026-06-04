@@ -64,16 +64,16 @@ public class Game {
     }
 
     private void determineWinner(){
-        int score0 = players[0].getScore();
-        int score1 = players[1].getScore();
-
         int[] table = board.getTable();
         for (int i = 1; i <= 5; i++) {
-            score0 += table[i];
+            players[0].updateScore(table[i]);
         }
         for (int i = 7; i <= 11; i++) {
-            score1 += table[i];
+            players[1].updateScore(table[i]);
         }
+
+        int score0 = players[0].getScore();
+        int score1 = players[1].getScore();
 
         if (score0 > score1) {
             this.winnerId = 0;
@@ -88,6 +88,7 @@ public class Game {
         if (this.winnerId == 0) return players[0];
         if (this.winnerId == 1) return players[1];
 
+        //TODO: Remove this part so that it will instead raise an exception
         Player tiePlayer = new Player(0);
         tiePlayer.resetScore();
         tiePlayer.updateScore(players[0].getScore());
@@ -133,6 +134,7 @@ public class Game {
         List<Pair<Integer, Integer>> fillMoves = new ArrayList<>();
         if (board.checkEnding()) {
             this.isFinished = true;
+            updateGameState();
             return fillMoves; 
         }
         int emptyPlayer = board.checkEmpty();

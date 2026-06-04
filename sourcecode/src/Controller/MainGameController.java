@@ -132,7 +132,10 @@ public class MainGameController extends BaseController {
             List<Pair<Integer, Integer>> fillSequence = game.postTurnProcessing();
             animateMoves(fillSequence, () -> {
                 if (game.isFinished()) {
-                    loadEndingScene();
+                    postGameVisualEffect(() -> {
+                        loadEndingScene();
+                    });
+                    
                 } else {
                     state = 1;
                     highlightAvailableSquareState1(game.getCurrentPlayer());
@@ -151,7 +154,7 @@ public class MainGameController extends BaseController {
             scene.getStylesheets().add(css);
 
             EndingController ending = loader.getController();
-            ending.displayWinner(game.getWinner().getName(), game.getWinner().getScore(), game.getWinner().getAvatar());
+            ending.displayWinner(game.getWinner().getName(), game.getWinner().getAvatar());
 
             currentStage.hide();
             currentStage.setScene(scene);
@@ -285,4 +288,39 @@ public class MainGameController extends BaseController {
         }
         return true;
     }
+
+    public void postGameVisualEffect(Runnable onFinished){
+        Timeline timeline = new Timeline();
+
+        timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(1), e -> {
+            for(int i = 1; i <= 5; i++){
+                allCells[i].setText("0");
+            }
+            updateScoreUI(0, game.getPlayers()[0].getScore());
+        }));
+        timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(2), e -> {
+            for(int i = 7; i <= 11; i++){
+                allCells[i].setText("0");
+            }
+            updateScoreUI(1, game.getPlayers()[1].getScore());
+        }));
+
+        
+        for(int i = 0; i < 6; i++){
+            final double on  = 3 + i * 1.0; 
+            final double off = 3.5 + i * 1.0; 
+            timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(on), e -> {
+                Label winnerScore = game.getWinnerId() == 0 ? scoreP1 : scoreP2;
+                winnerScore.setTextFill(Color.GOLD);
+            }));
+            timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(off), e -> {
+                Label winnerScore = game.getWinnerId() == 0 ? scoreP1 : scoreP2;
+                winnerScore.setTextFill(Color.WHITE);
+            }));
+        }
+
+        timeline.setOnFinished(e -> onFinished.run());
+        timeline.play();
+    }
+
 }
