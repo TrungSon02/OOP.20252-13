@@ -17,13 +17,9 @@ public class EndingController extends BaseController{
         System.out.println("Final results screen initialized.");
     }
 
-    public void displayWinner(String name, int score, String avatarPath) {
+    public void displayWinner(String name, String avatarPath) {
         if (winnerNameLabel != null) {
-            winnerNameLabel.setText("WINNER: " + name);
-        }
-
-        if (winnerScoreLabel != null) {
-            winnerScoreLabel.setText("Final Score: " + score);
+            winnerNameLabel.setText("Player " + name + " wins!");
         }
 
         try {

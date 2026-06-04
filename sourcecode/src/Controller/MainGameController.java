@@ -1,11 +1,17 @@
 package Controller;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import Model.Game;
+import Model.Player;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -17,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.stage.Stage;
 
 public class MainGameController extends BaseController {
 
@@ -113,6 +120,7 @@ public class MainGameController extends BaseController {
             }   
         }
     }
+
     public void onPlayerMove(int startingSquare, int direction){
         //IDea: Animation 1 finishes THEN update score and run animation 2 THEN hightlight
         state = -1;
@@ -123,10 +131,39 @@ public class MainGameController extends BaseController {
 
             List<Pair<Integer, Integer>> fillSequence = game.postTurnProcessing();
             animateMoves(fillSequence, () -> {
-                state = 1;
-                highlightAvailableSquareState1(game.getCurrentPlayer());
+                if (game.isFinished()) {
+                    postGameVisualEffect(() -> {
+                        loadEndingScene();
+                    });
+                    
+                } else {
+                    state = 1;
+                    highlightAvailableSquareState1(game.getCurrentPlayer());
+                }
             });
         });    
+    }
+
+    private void loadEndingScene() {
+        try {
+            Stage currentStage = (Stage) scoreP1.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ending.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            String css = Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm();
+            scene.getStylesheets().add(css);
+
+            EndingController ending = loader.getController();
+            ending.displayWinner(game.getWinner().getName(), game.getWinner().getAvatar());
+
+            currentStage.hide();
+            currentStage.setScene(scene);
+            currentStage.setFullScreen(true);
+            currentStage.setFullScreenExitHint("");
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void animateMoves(List<Pair<Integer, Integer>> moves, Runnable onFinished) {
@@ -251,4 +288,39 @@ public class MainGameController extends BaseController {
         }
         return true;
     }
+
+    public void postGameVisualEffect(Runnable onFinished){
+        Timeline timeline = new Timeline();
+
+        timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(1), e -> {
+            for(int i = 1; i <= 5; i++){
+                allCells[i].setText("0");
+            }
+            updateScoreUI(0, game.getPlayers()[0].getScore());
+        }));
+        timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(2), e -> {
+            for(int i = 7; i <= 11; i++){
+                allCells[i].setText("0");
+            }
+            updateScoreUI(1, game.getPlayers()[1].getScore());
+        }));
+
+        
+        for(int i = 0; i < 6; i++){
+            final double on  = 3 + i * 1.0; 
+            final double off = 3.5 + i * 1.0; 
+            timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(on), e -> {
+                Label winnerScore = game.getWinnerId() == 0 ? scoreP1 : scoreP2;
+                winnerScore.setTextFill(Color.GOLD);
+            }));
+            timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(off), e -> {
+                Label winnerScore = game.getWinnerId() == 0 ? scoreP1 : scoreP2;
+                winnerScore.setTextFill(Color.WHITE);
+            }));
+        }
+
+        timeline.setOnFinished(e -> onFinished.run());
+        timeline.play();
+    }
+
 }

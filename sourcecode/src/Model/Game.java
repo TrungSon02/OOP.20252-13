@@ -10,6 +10,7 @@ public class Game {
     private Player[] players;
     private int currentPlayer;
     private boolean isFinished;
+    private int winnerId = -1;
 
     public Game() {
         players = new Player[2];
@@ -20,6 +21,7 @@ public class Game {
         this.isFinished = false;
     }
 
+    //TODO: Update handle Capture to return a list of moves instead
     public List<Pair<Integer, Integer>> handleCapture(int stopIndex, int direction) {
         List<Pair<Integer, Integer>> captureMoves = new ArrayList<>();
         int totalCaptured = 0;
@@ -57,7 +59,44 @@ public class Game {
     public void updateGameState() {
         if (board.getTable()[0] == 0 && board.getTable()[6] == 0) {
             this.isFinished = true;
+            determineWinner();
         }
+    }
+
+    private void determineWinner(){
+        int[] table = board.getTable();
+        for (int i = 1; i <= 5; i++) {
+            players[0].updateScore(table[i]);
+        }
+        for (int i = 7; i <= 11; i++) {
+            players[1].updateScore(table[i]);
+        }
+
+        int score0 = players[0].getScore();
+        int score1 = players[1].getScore();
+
+        if (score0 > score1) {
+            this.winnerId = 0;
+        } else if (score1 > score0) {
+            this.winnerId = 1;
+        } else {
+            this.winnerId = 99;
+        }
+    }
+
+    public Player getWinner(){
+        if (this.winnerId == 0) return players[0];
+        if (this.winnerId == 1) return players[1];
+
+        //TODO: Remove this part so that it will instead raise an exception
+        Player tiePlayer = new Player(0);
+        tiePlayer.resetScore();
+        tiePlayer.updateScore(players[0].getScore());
+        return tiePlayer;
+    }
+
+    public int getWinnerId() {
+        return this.winnerId;
     }
 
     public Board getBoardState() {
@@ -78,7 +117,7 @@ public class Game {
 
     
     public List<Pair<Integer, Integer>> proccessingTurn(int startIndex, int direction){
-        //Implement this method: Call moveGem -> Call handle capture
+        //TODO 2: Implement this method: Call moveGem -> Call handle capture
         //return: A complete sequence of moves from the start to the end (combine the existing moves in moveGem with new captured moves)
         List<Pair<Integer, Integer>> moveSequence = board.moveGem(startIndex, direction);
         if (moveSequence != null && !moveSequence.isEmpty()) {
@@ -90,11 +129,12 @@ public class Game {
     }
 
     public List<Pair<Integer, Integer>> postTurnProcessing(){
-        //Call checkEnding method from Board and update isFinished if needed, if game still continues, call checkEmpty from Board -> call fillGem if empty -> Switch players
+        //TODO 3: Call checkEnding method from Board and update isFinished if needed, if game still continues, call checkEmpty from Board -> call fillGem if empty -> Switch players
         //If we need to fill empty square, return a list of moves. Else return an empty list
         List<Pair<Integer, Integer>> fillMoves = new ArrayList<>();
         if (board.checkEnding()) {
             this.isFinished = true;
+            updateGameState();
             return fillMoves; 
         }
         int emptyPlayer = board.checkEmpty();
