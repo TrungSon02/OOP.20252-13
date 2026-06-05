@@ -1,6 +1,8 @@
 package Model;
 import java.util.Random;
 
+import javafx.beans.property.SimpleIntegerProperty;
+
 public class Player {
     private String name;    
     private int score;
@@ -8,6 +10,8 @@ public class Player {
 
     static final String[] PLAYER_ADJECTIVES = {"Hungry", "Brave", "Cunning", "Swift", "Almighty", "Wise", "Fierce", "Smart", "Quick"};
     static final String[] PLAYER_NOUN = {"Hippo", "Giraffe", "Elephant", "Lion","Tiger", "Bear", "Wolf", "Fox", "Eagle", "Shark","Sloth","Turtle","Pattrick","Banana","Chongus",};
+    
+
     
     private String generatePlayerNames(){
         Random random = new Random();

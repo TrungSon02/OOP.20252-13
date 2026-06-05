@@ -1,9 +1,7 @@
 package Controller;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import Model.Game;
 import View.BaseGem;
@@ -28,8 +26,8 @@ import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
+
 public class MainGameController extends BaseController {
-    private Game games;
 
     @FXML private Label labelPlayer1, labelPlayer2;
 
@@ -54,14 +52,21 @@ public class MainGameController extends BaseController {
     private static final int GEMS_PER_ROW = 4;
     private final Random rng = new Random(); // used only for slight positional jitter
 
+    /**
+     * Animation-synced view of whether each castle still holds its quan.
+     * Slot 0 = cell 0 (player 1's castle), slot 1 = cell 6 (player 2's castle).
+     *
+     * We deliberately do NOT read game.checkBigGemExistence() while rendering: the model
+     * resolves the whole turn (move + capture) up front, so its quan flag is already at the
+     * end-of-turn value before the animation replays. This local flag is flipped at the exact
+     * animation frame the castle is emptied, so the quan stays drawn until it is actually taken.
+     */
+    private final boolean[] checkBigGemExistence = { true, true };
+
     private Game game;
     private static final Duration STEP_DELAY = Duration.millis(700); // tweak speed here
     private int state = 1;
     private int selectedSquare = -1;
-    @FXML
-public void initializes() {
-    game = new Game();  // controller owns the Game instance
-}
 
     @FXML
     public void initialize() {
@@ -82,6 +87,10 @@ public void initializes() {
             cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11
         };
         cellPiles = new Pane[allCellPanes.length];
+
+        // ok just redeclaring it to be sure
+        checkBigGemExistence[0] = true;
+        checkBigGemExistence[1] = true;
 
         for (int i = 0; i <= 11; i++) {
             allCells[i].setText("5");
@@ -176,6 +185,11 @@ public void initializes() {
             timeline.getKeyFrames().add(new KeyFrame(when, e -> {
                 if (allCells[cellIndex] != null) {  // this line is a safety check
                     allCells[cellIndex].setText(String.valueOf(newValue));// actual action here
+                }
+                // A castle only ever reaches 0 when it is captured. Flip the quan off at that
+                // exact frame (not earlier), so the big gem stays visible until it is actually taken.
+                if (isBigCell(cellIndex) && newValue == 0) {
+                    checkBigGemExistence[castleSlot(cellIndex)] = false;
                 }
                 renderGemsInCell(cellIndex, newValue); // keep gems in sync with the count
             }));
@@ -290,6 +304,11 @@ public void initializes() {
         return cellIndex == 0 || cellIndex == 6;
     }
 
+    /** Map a castle cell index to its quanAlive slot: cell 0 -> 0, cell 6 -> 1. */
+    private int castleSlot(int cellIndex) {
+        return cellIndex == 0 ? 0 : 1;
+    }
+
     /** Redraw the gems in every cell from the current label values. */
     private void renderAllGems() {
         for (int i = 0; i < allCellPanes.length; i++) {
@@ -326,16 +345,18 @@ public void initializes() {
     }
 
     /**
-     * A castle shows exactly ONE big gem (the quan), worth {@link BigGem#VALUE}, which never moves.
-     * Any small gems that have travelled in from the small squares stay small and pile up beside it.
+     * A castle shows exactly ONE big gem (the quan), worth {@link BigGem#VALUE}, which never moves,
+     * plus any small gems that have travelled in from the small squares (they stay small).
      *
-     * The model stores a castle's count as: 5 (the quan) + however many small gems landed there.
-     * So count >= 5 means the quan is still present; count == 0 means it has been captured.
+     * Whether the quan is present comes from the animation-synced {@link #quanAlive} flag, NOT from
+     * the model, so the big gem stays drawn until the very frame the castle is captured. Once a
+     * castle has been captured, quanAlive stays false, so it never grows a phantom quan even if it
+     * later accumulates 5+ small gems.
      */
     private void renderCastle(Pane pile, int cellIndex, int count, double cellW, double cellH) {
-    
-    boolean quanPresent = game.checkBigGemExistence(cellIndex);
+        boolean quanPresent = checkBigGemExistence[castleSlot(cellIndex)];
         int smallCount = quanPresent ? count - BigGem.VALUE : count;
+        if (smallCount < 0) smallCount = 0;
 
         if (quanPresent) {
             BigGem quan = new BigGem();

@@ -3,6 +3,7 @@ package Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Pair;
 
 public class Game {
@@ -10,6 +11,7 @@ public class Game {
     private Player[] players;
     private int currentPlayer;
     private boolean isFinished;
+    
 
     public Game() {
         players = new Player[2];
@@ -113,7 +115,5 @@ public class Game {
         return fillMoves;
     }
 
-    public boolean checkBigGemExistence(int id){
-        return board.getBigGem(id % 5);
-    }
+    
 }
