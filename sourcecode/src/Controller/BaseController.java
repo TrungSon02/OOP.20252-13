@@ -20,7 +20,7 @@ public class BaseController {
 
     public void loadScene(String fxmlPath, ActionEvent event){
         //PHUC
-        //Get a String input param (the path to a fxml file). Load the scene + Load the css (same command as in App.java)
+        //Get a String input param (the path to a fxml file). Load the scene + Load the css
         try{
             root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -44,21 +44,21 @@ public class BaseController {
     @FXML
     public void goHome(ActionEvent event){
         //PHUC
-        //1 line: Use the loadScene method above to load the menu.fxml scene
+        //Use the loadScene method above to load the menu.fxml scene
         loadScene("/fxml/menu.fxml", event);
     }
 
     @FXML
     public void goPlay(ActionEvent event){
         //PHUC
-        //1 line: Use the loadScene method above to load the main_game.fxml scene
+        //Use the loadScene method above to load the main_game.fxml scene
         loadScene("/fxml/main_game.fxml", event);
     }
 
     @FXML
     public void exit(){
         //PHUC
-        //Exit the game (Like alt f4). (Watch the Code Bro YT vid for the sample code for exiting game)
+        //Exit the game (Like alt f4)
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit Confirmation");
         alert.setHeaderText("Are you sure you want to quit the game?");

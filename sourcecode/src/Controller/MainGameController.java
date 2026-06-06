@@ -31,8 +31,8 @@ public class MainGameController extends BaseController {
 
     @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
     @FXML private Label labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11;
-    @FXML private Label scoreP1, scoreP2;
-    @FXML private ImageView avatarP1, avatarP2;
+    @FXML private Label scoreP0, scoreP1;
+    @FXML private ImageView avatarP0, avatarP1;
 
     @FXML private Rectangle overlay1, overlay2, overlay3, overlay4, overlay5, overlay7, overlay8, overlay9, overlay10, overlay11;
     @FXML private Arc overlay0, overlay6;
@@ -40,7 +40,7 @@ public class MainGameController extends BaseController {
     @FXML private StackPane cellPane0, cellPane1, cellPane2, cellPane3, cellPane4, cellPane5;
     @FXML private StackPane cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11;
 
-    private Label[] allCells;
+    private Label[] allCellLabels;
     private Shape[] allOverlays;
 
     private Game game;
@@ -54,7 +54,7 @@ public class MainGameController extends BaseController {
     @FXML
     public void initialize() {
         this.game = new Game();
-        allCells = new Label[]{
+        allCellLabels = new Label[]{
                 labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5,
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
             };
@@ -68,15 +68,15 @@ public class MainGameController extends BaseController {
             cellPane0, cellPane1, cellPane2, cellPane3, cellPane4, cellPane5,
             cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11
         };
-        gemRenderer = new GemRenderer(allCellPanes, allCells);
+        gemRenderer = new GemRenderer(allCellPanes, allCellLabels);
         highlighter = new SquareHighlighter(allOverlays);
 
         for (int i = 0; i <= 11; i++) {
-            allCells[i].setText("5");
+            allCellLabels[i].setText("5");
         }
 
+        scoreP0.setText("Score: 0");
         scoreP1.setText("Score: 0");
-        scoreP2.setText("Score: 0");
 
         highlighter.highlightAvailableSquareState1(game.getAvailableSquares());
         initializePlayerData();
@@ -88,15 +88,15 @@ public class MainGameController extends BaseController {
     private void initializePlayerData() {
         labelPlayer1.setText("Player " + game.getPlayerName(0));
         labelPlayer2.setText("Player " + game.getPlayerName(1));
-        String avatarPathP1 = game.getPlayerAvatar(0);
-        String avatarPathP2 = game.getPlayerAvatar(1);
+        String avatarPathP0 = game.getPlayerAvatar(0);
+        String avatarPathP1 = game.getPlayerAvatar(1);
 
         try {
+            Image imgPlayer0 = new Image(getClass().getResourceAsStream(avatarPathP0));
             Image imgPlayer1 = new Image(getClass().getResourceAsStream(avatarPathP1));
-            Image imgPlayer2 = new Image(getClass().getResourceAsStream(avatarPathP2));
 
+            if (avatarP0 != null) avatarP0.setImage(imgPlayer0);
             if (avatarP1 != null) avatarP1.setImage(imgPlayer1);
-            if (avatarP2 != null) avatarP2.setImage(imgPlayer2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,7 +129,7 @@ public class MainGameController extends BaseController {
         }
     }
 
-    public void onPlayerMove(int startingSquare, int direction){
+    private void onPlayerMove(int startingSquare, int direction){
         state = -1;
         highlighter.resetAllSquares();
         List<Pair<Integer, Integer>> moveSequence = game.proccessingTurn(startingSquare, direction);
@@ -154,7 +154,7 @@ public class MainGameController extends BaseController {
 
     private void loadEndingScene() {
         try {
-            Stage currentStage = (Stage) scoreP1.getScene().getWindow();
+            Stage currentStage = (Stage) scoreP0.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ending.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
@@ -180,7 +180,7 @@ public class MainGameController extends BaseController {
         }
     }
 
-    public void animateMoves(List<Pair<Integer, Integer>> moves, Runnable onFinished) {
+    private void animateMoves(List<Pair<Integer, Integer>> moves, Runnable onFinished) {
         Timeline timeline = new Timeline();
         for (int i = 0; i < moves.size(); i++) {
             Pair<Integer, Integer> step = moves.get(i);
@@ -189,44 +189,42 @@ public class MainGameController extends BaseController {
             Duration when = STEP_DELAY.multiply(i + 1);
 
             timeline.getKeyFrames().add(new KeyFrame(when, e -> {
-                if (allCells[cellIndex] != null) {  // this line is a safety check
-                    allCells[cellIndex].setText(String.valueOf(newValue));// actual action here
+                if (allCellLabels[cellIndex] != null) { 
+                    allCellLabels[cellIndex].setText(String.valueOf(newValue));
                 }
-                // A castle only ever reaches 0 when it is captured. Flip the quan off at that
-                // exact frame (not earlier), so the big gem stays visible until it is actually taken.
                 if (game.isBigCell(cellIndex) && newValue == 0) {
                     gemRenderer.removeBigGem(cellIndex);
                 }
                 gemRenderer.renderGemsInCell(cellIndex, newValue);
             }));
         }
-        timeline.setOnFinished(e -> onFinished.run()); //When timeline finishes, run the code in -> {}
+        timeline.setOnFinished(e -> onFinished.run()); //When timeline finishes, run the code in {}
         timeline.play();
     }
 
-    public void updateScoreUI(){
-        scoreP1.setText("Score: " + game.getPlayerScore(0));
-        scoreP2.setText("Score: " + game.getPlayerScore(1));
+    private void updateScoreUI(){
+        scoreP0.setText("Score: " + game.getPlayerScore(0));
+        scoreP1.setText("Score: " + game.getPlayerScore(1));
     }
 
-    private static int convertStringToInt(String str){
+    private int convertStringToInt(String str){
         str=str.replaceAll("[^0-9]", "");
         return Integer.parseInt(str);
     }
 
-    public void postGameVisualEffect(Runnable onFinished){
+    private void postGameVisualEffect(Runnable onFinished){
         Timeline timeline = new Timeline();
-
+        
         timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(1), e -> {
             for(int i = 1; i <= 5; i++){
-                allCells[i].setText("0");
+                allCellLabels[i].setText("0");
                 gemRenderer.renderGemsInCell(i, 0);
             }
             updateScoreUI();
         }));
         timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(2), e -> {
             for(int i = 7; i <= 11; i++){
-                allCells[i].setText("0");
+                allCellLabels[i].setText("0");
                 gemRenderer.renderGemsInCell(i, 0);
             }
             updateScoreUI();
@@ -238,18 +236,18 @@ public class MainGameController extends BaseController {
             final double off = 3.5 + i * 1.0; 
             timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(on), e -> {
                 if(game.getWinnerId() == 0){
-                    scoreP1.setTextFill(Color.GOLD);
+                    scoreP0.setTextFill(Color.GOLD);
                 }
                 else if(game.getWinnerId() == 1){
-                    scoreP2.setTextFill(Color.GOLD);
+                    scoreP1.setTextFill(Color.GOLD);
                 }
             }));
             timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(off), e -> {
                 if(game.getWinnerId() == 0){
-                    scoreP1.setTextFill(Color.WHITE);
+                    scoreP0.setTextFill(Color.WHITE);
                 }
                 else if(game.getWinnerId() == 1){
-                    scoreP2.setTextFill(Color.WHITE);
+                    scoreP1.setTextFill(Color.WHITE);
                 }
             }));
         }

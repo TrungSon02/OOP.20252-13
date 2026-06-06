@@ -23,13 +23,13 @@
                <children>
                   <Label fx:id="labelPlayer1" styleClass="name-label" text="Player 1" />
                   <StackPane maxWidth="110.0" styleClass="avatar-frame">
-                     <ImageView fx:id="avatarP1" fitHeight="110.0" fitWidth="110.0" preserveRatio="false" />
+                     <ImageView fx:id="avatarP0" fitHeight="110.0" fitWidth="110.0" preserveRatio="false" />
                   </StackPane>
                </children>
             </VBox>
             <VBox alignment="CENTER" prefWidth="200" HBox.hgrow="ALWAYS">
                <children>
-                  <Label fx:id="scoreP1" styleClass="score-label" text="Score: 0" />
+                  <Label fx:id="scoreP0" styleClass="score-label" text="Score: 0" />
                </children>
             </VBox>
          </children>
@@ -144,14 +144,14 @@
             <VBox alignment="CENTER">
                <children>
                   <StackPane maxWidth="110.0" styleClass="avatar-frame">
-                     <ImageView fx:id="avatarP2" fitHeight="110.0" fitWidth="110.0" preserveRatio="false" />
+                     <ImageView fx:id="avatarP1" fitHeight="110.0" fitWidth="110.0" preserveRatio="false" />
                   </StackPane>
                   <Label fx:id="labelPlayer2" styleClass="name-label" text="Player 2" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefWidth="200" HBox.hgrow="ALWAYS">
                <children>
-                  <Label fx:id="scoreP2" styleClass="score-label" text="Score: 0" />
+                  <Label fx:id="scoreP1" styleClass="score-label" text="Score: 0" />
                </children></VBox>
          </children>
       </HBox>

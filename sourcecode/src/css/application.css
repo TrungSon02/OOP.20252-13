@@ -108,7 +108,7 @@
 .instruction-body {
     -fx-text-fill: #FFF5E0;
     -fx-font-family: "Super Maples";
-    -fx-font-size: 22px;
+    -fx-font-size: 24px;
     -fx-padding: 5;
     -fx-wrap-text: true;
     -fx-max-width: infinity;

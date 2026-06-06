@@ -10,13 +10,13 @@ import javafx.scene.layout.StackPane;
 
 public class GemRenderer {
     private StackPane[] allCellPanes;
-    private Label[] allCells;
+    private Label[] allCellLabel;
     private Pane[] cellPiles;    
     private CellRenderer[] cellRenderers;
 
     public GemRenderer(StackPane[] allCellPanes, Label[] allCells) {
         this.allCellPanes = allCellPanes;
-        this.allCells = allCells;
+        this.allCellLabel = allCells;
         this.cellPiles = new Pane[12];
 
         cellRenderers = new CellRenderer[12];
@@ -31,7 +31,7 @@ public class GemRenderer {
 
     public void renderAllGems() {
         for (int i = 0; i < allCellPanes.length; i++) {
-            renderGemsInCell(i, parseCount(allCells[i]));
+            renderGemsInCell(i, parseCount(allCellLabel[i]));
         }
     }
 
@@ -48,8 +48,8 @@ public class GemRenderer {
 
         cellRenderers[cellIndex].render(pile, count, cellW, cellH);
 
-        if (allCells[cellIndex] != null) {
-            allCells[cellIndex].toFront();
+        if (allCellLabel[cellIndex] != null) {
+            allCellLabel[cellIndex].toFront();
         }
     }
 
@@ -57,7 +57,7 @@ public class GemRenderer {
         ((CastleCellRenderer) cellRenderers[cellIndex]).unsetBigGem();
     }
     
-    /** Lazily create a transparent layer inside the cell's StackPane that holds the gems. */
+    /** Create a transparent layer inside the cell's StackPane that holds the gems. */
     private Pane ensurePile(int cellIndex) {
         if (cellPiles[cellIndex] != null) return cellPiles[cellIndex];
 
@@ -68,7 +68,7 @@ public class GemRenderer {
         cellPiles[cellIndex] = pile;
 
         StackPane sp = allCellPanes[cellIndex];
-        int labelIdx = sp.getChildren().indexOf(allCells[cellIndex]);
+        int labelIdx = sp.getChildren().indexOf(allCellLabel[cellIndex]);
         if (labelIdx >= 0) {
             sp.getChildren().add(labelIdx, pile);
         } else {
