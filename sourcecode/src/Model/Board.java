@@ -17,8 +17,8 @@ public class Board {
         }
     }
 
-    public int[] getTable() {
-        return table;
+    public int getSquareValue(int index){
+        return table[index];
     }
 
     public List<Pair<Integer, Integer>> moveGem(int startPosition, int direction) {

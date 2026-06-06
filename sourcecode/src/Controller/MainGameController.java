@@ -86,10 +86,10 @@ public class MainGameController extends BaseController {
     }
 
     private void initializePlayerData() {
-        labelPlayer1.setText("Player " + game.getPlayers()[0].getName());
-        labelPlayer2.setText("Player " + game.getPlayers()[1].getName());
-        String avatarPathP1 = game.getPlayers()[0].getAvatar();
-        String avatarPathP2 = game.getPlayers()[1].getAvatar();
+        labelPlayer1.setText("Player " + game.getPlayerName(0));
+        labelPlayer2.setText("Player " + game.getPlayerName(1));
+        String avatarPathP1 = game.getPlayerAvatar(0);
+        String avatarPathP2 = game.getPlayerAvatar(1);
 
         try {
             Image imgPlayer1 = new Image(getClass().getResourceAsStream(avatarPathP1));
@@ -162,8 +162,9 @@ public class MainGameController extends BaseController {
             scene.getStylesheets().add(css);
 
             EndingController ending = loader.getController();
-            if(game.getWinner() != null){
-                ending.displayWinner(game.getWinner().getName(), game.getWinner().getAvatar());
+            int winnerID = game.getWinnerId();
+            if(winnerID != -1){
+                ending.displayWinner(game.getPlayerName(winnerID), game.getPlayerAvatar(winnerID));
             }
             else{
                 ending.displayWinner("It's a Tie!", null); 
@@ -208,7 +209,7 @@ public class MainGameController extends BaseController {
         scoreP2.setText("Score: " + game.getPlayerScore(1));
     }
 
-    public static int convertStringToInt(String str){
+    private static int convertStringToInt(String str){
         str=str.replaceAll("[^0-9]", "");
         return Integer.parseInt(str);
     }
