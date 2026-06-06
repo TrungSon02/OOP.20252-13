@@ -2,13 +2,9 @@ package Controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 import java.util.Objects;
 
 import Model.Game;
-import View.BaseGem;
-import View.BigGem;
-import View.SmallGem;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -16,13 +12,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.geometry.Bounds;
 import javafx.scene.control.Label;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -52,12 +46,6 @@ public class MainGameController extends BaseController {
     private Label[] allCells;
     private Shape[] allOverlays;
 
-    // Gem rendering support
-    private StackPane[] allCellPanes;
-    private Pane[] cellPiles; // one transparent layer per cell that holds its gems
-    private static final int GEMS_PER_ROW = 4;
-    private final Random rng = new Random(); // used only for slight positional jitter
-
     /**
      * Animation-synced view of whether each castle still holds its quan.
      * Slot 0 = cell 0 (player 1's castle), slot 1 = cell 6 (player 2's castle).
@@ -67,9 +55,9 @@ public class MainGameController extends BaseController {
      * end-of-turn value before the animation replays. This local flag is flipped at the exact
      * animation frame the castle is emptied, so the quan stays drawn until it is actually taken.
      */
-    private final boolean[] checkBigGemExistence = { true, true };
 
     private Game game;
+    private GemRenderer gemRenderer;
     private static final Duration STEP_DELAY = Duration.millis(700); // tweak speed here
     private int state = 1;
     private int selectedSquare = -1;
@@ -87,16 +75,10 @@ public class MainGameController extends BaseController {
             overlay6, overlay7, overlay8, overlay9, overlay10, overlay11
         };
 
-        // Collect the StackPanes so we can draw gems into each cell
-        allCellPanes = new StackPane[]{
+        StackPane[] allCellPanes = new StackPane[]{
             cellPane0, cellPane1, cellPane2, cellPane3, cellPane4, cellPane5,
             cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11
         };
-        cellPiles = new Pane[allCellPanes.length];
-
-        // ok just redeclaring it to be sure
-        checkBigGemExistence[0] = true;
-        checkBigGemExistence[1] = true;
 
         for (int i = 0; i <= 11; i++) {
             allCells[i].setText("5");
@@ -108,14 +90,8 @@ public class MainGameController extends BaseController {
         highlightAvailableSquareState1(game.getCurrentPlayer());
         initializePlayerData();
 
-        // Draw gems after the first layout pass, so the cells already have a real size
-        Platform.runLater(() -> {
-            if (cellPane1 != null && cellPane1.getScene() != null) {
-                cellPane1.getScene().getRoot().applyCss();
-                cellPane1.getScene().getRoot().layout();
-            }
-            renderAllGems();
-        });
+        gemRenderer = new GemRenderer(allCellPanes, allCells);
+        Platform.runLater(() -> gemRenderer.renderAllGems());
     }
 
     private void initializePlayerData() {
@@ -174,6 +150,7 @@ public class MainGameController extends BaseController {
 
             List<Pair<Integer, Integer>> fillSequence = game.postTurnProcessing();
             animateMoves(fillSequence, () -> {
+                updateScoreUI(game.getCurrentPlayer(), game.getPlayers()[game.getCurrentPlayer()].getScore());
                 if (game.isFinished()) {
                     postGameVisualEffect(() -> {
                         loadEndingScene();
@@ -224,9 +201,9 @@ public class MainGameController extends BaseController {
                 // A castle only ever reaches 0 when it is captured. Flip the quan off at that
                 // exact frame (not earlier), so the big gem stays visible until it is actually taken.
                 if (isBigCell(cellIndex) && newValue == 0) {
-                    checkBigGemExistence[castleSlot(cellIndex)] = false;
+                    gemRenderer.removeBigGem(cellIndex);
                 }
-                renderGemsInCell(cellIndex, newValue); // keep gems in sync with the count
+                gemRenderer.renderGemsInCell(cellIndex, newValue);
             }));
         }
         timeline.setOnFinished(e -> onFinished.run()); //When timeline finishes, run the code in -> {}
@@ -366,123 +343,12 @@ public class MainGameController extends BaseController {
         timeline.play();
     }
 
+    
     // ---------------- Gem rendering ----------------
 
     /** The two "castle" arc cells hold the immovable big gem (quan); all other cells hold small gems. */
     private boolean isBigCell(int cellIndex) {
         return cellIndex == 0 || cellIndex == 6;
     }
-
-    /** Map a castle cell index to its quanAlive slot: cell 0 -> 0, cell 6 -> 1. */
-    private int castleSlot(int cellIndex) {
-        return cellIndex == 0 ? 0 : 1;
-    }
-
-    /** Redraw the gems in every cell from the current label values. */
-    private void renderAllGems() {
-        for (int i = 0; i < allCellPanes.length; i++) {
-            renderGemsInCell(i, parseCount(allCells[i]));
-        }
-    }
-
-    /** Draw the gems for cell `cellIndex` given its current `count`, replacing whatever was there before. */
-    private void renderGemsInCell(int cellIndex, int count) {
-        if (cellIndex < 0 || cellIndex >= allCellPanes.length) return;
-        if (allCellPanes[cellIndex] == null) return;
-
-        Pane pile = ensurePile(cellIndex);
-        pile.getChildren().clear();
-
-        Bounds cb = allCellPanes[cellIndex].getLayoutBounds();
-        double cellW = cb.getWidth()  > 0 ? cb.getWidth()  : 150;
-        double cellH = cb.getHeight() > 0 ? cb.getHeight() : 150;
-
-        if (isBigCell(cellIndex)) {
-            renderCastle(pile, cellIndex, count, cellW, cellH);
-        } else {
-            // Small square: every gem here is, and stays, a small gem.
-            for (int i = 0; i < count; i++) {
-                SmallGem gem = new SmallGem();
-                placeInGrid(gem, i, GEMS_PER_ROW, cellW / 2.0, cellH / 2.0 - SmallGem.RADIUS * 2.2);
-                pile.getChildren().add(gem);
-            }
-        }
-
-        if (allCells[cellIndex] != null) {
-            allCells[cellIndex].toFront(); // keep the number readable on top of the gems
-        }
-    }
-
-    /**
-     * A castle shows exactly ONE big gem (the quan), worth {@link BigGem#VALUE}, which never moves,
-     * plus any small gems that have travelled in from the small squares (they stay small).
-     *
-     * Whether the quan is present comes from the animation-synced {@link #quanAlive} flag, NOT from
-     * the model, so the big gem stays drawn until the very frame the castle is captured. Once a
-     * castle has been captured, quanAlive stays false, so it never grows a phantom quan even if it
-     * later accumulates 5+ small gems.
-     */
-    private void renderCastle(Pane pile, int cellIndex, int count, double cellW, double cellH) {
-        boolean quanPresent = checkBigGemExistence[castleSlot(cellIndex)];
-        int smallCount = quanPresent ? count - BigGem.VALUE : count;
-        if (smallCount < 0) smallCount = 0;
-
-        if (quanPresent) {
-            BigGem quan = new BigGem();
-            quan.setLayoutX(cellW / 2.0);   // centered, and never repositioned by a move
-            quan.setLayoutY(cellH / 2.0);
-            pile.getChildren().add(quan);
-        }
-
-        // Small gems collect just below the quan.
-        double topY = cellH / 2.0 + BigGem.RADIUS + SmallGem.RADIUS;
-        for (int i = 0; i < smallCount; i++) {
-            SmallGem gem = new SmallGem();
-            placeInGrid(gem, i, GEMS_PER_ROW, cellW / 2.0, topY);
-            pile.getChildren().add(gem);
-        }
-    }
-
-    /** Place `gem` at slot `idx` of a centered grid (center column = `centerX`, first row at `topY`). */
-    private void placeInGrid(BaseGem gem, int idx, int perRow, double centerX, double topY) {
-        double spacing = gem.getRadius() * 2.2;
-        int row = idx / perRow;
-        int col = idx % perRow;
-        double startX = centerX - (perRow - 1) * spacing / 2.0;
-        double jitterX = (rng.nextDouble() - 0.5) * 3;
-        double jitterY = (rng.nextDouble() - 0.5) * 3;
-        gem.setLayoutX(startX + col * spacing + jitterX);
-        gem.setLayoutY(topY + row * spacing + jitterY);
-    }
-
-    /** Lazily create a transparent layer inside the cell's StackPane that holds the gems. */
-    private Pane ensurePile(int cellIndex) {
-        if (cellPiles[cellIndex] != null) return cellPiles[cellIndex];
-
-        Pane pile = new Pane();
-        pile.setMouseTransparent(true);  // never intercept clicks meant for the overlay/cell
-        pile.setPickOnBounds(false);
-        pile.setManaged(false);          // we position gems by absolute coords, so don't let StackPane re-center this layer
-        cellPiles[cellIndex] = pile;
-
-        StackPane sp = allCellPanes[cellIndex];
-        // Insert just below the count label so the number stays on top of the gems
-        int labelIdx = sp.getChildren().indexOf(allCells[cellIndex]);
-        if (labelIdx >= 0) {
-            sp.getChildren().add(labelIdx, pile);
-        } else {
-            sp.getChildren().add(pile);
-        }
-        return pile;
-    }
-
-    /** Safely parse a label's text as an int, returns 0 if it can't. */
-    private int parseCount(Label label) {
-        if (label == null) return 0;
-        try {
-            return Integer.parseInt(label.getText().trim());
-        } catch (NumberFormatException e) {
-            return 0;
-        }
-    }
+    
 }

@@ -4,10 +4,6 @@ import java.util.Random;
 
 import javafx.scene.paint.Color;
 
-/**
- * A "dân" — an ordinary small gem. Worth 1 point.
- * Picks a random colour from the board palette each time one is created.
- */
 public class SmallGem extends BaseGem {
 
     public static final double RADIUS = 7.0;
