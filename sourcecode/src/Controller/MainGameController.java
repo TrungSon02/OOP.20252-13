@@ -214,12 +214,14 @@ public class MainGameController extends BaseController {
         timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(1), e -> {
             for(int i = 1; i <= 5; i++){
                 allCells[i].setText("0");
+                gemRenderer.renderGemsInCell(i, 0);
             }
             updateScoreUI();
         }));
         timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(2), e -> {
             for(int i = 7; i <= 11; i++){
                 allCells[i].setText("0");
+                gemRenderer.renderGemsInCell(i, 0);
             }
             updateScoreUI();
         }));
