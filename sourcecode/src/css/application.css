@@ -97,7 +97,7 @@
 }
 
 .instruction-title {
-    -fx-text-fill: #FFD700;
+    -fx-text-fill: #FFF5E0;
     -fx-font-family: "Xirod";
     -fx-font-size: 36px;
     -fx-padding: 10 20 10 20;
@@ -106,17 +106,17 @@
 }
 
 .instruction-body {
-    -fx-text-fill: #FFD700;
+    -fx-text-fill: #FFF5E0;
     -fx-font-family: "Super Maples";
-    -fx-font-size: 28px;
-    -fx-padding: 20;
+    -fx-font-size: 22px;
+    -fx-padding: 5;
     -fx-wrap-text: true;
     -fx-max-width: infinity;
 }
 
 .instruction-container {
     -fx-background-image: url("/image/layout/wood_surface.png");
-    -fx-background-size: cover;
+    -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
     -fx-background-radius: 10;
     -fx-padding: 20;
