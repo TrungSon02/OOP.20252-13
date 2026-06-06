@@ -13,7 +13,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -28,7 +27,6 @@ import javafx.util.Pair;
 
 
 public class MainGameController extends BaseController {
-
     @FXML private Label labelPlayer1, labelPlayer2;
 
     @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
@@ -39,26 +37,17 @@ public class MainGameController extends BaseController {
     @FXML private Rectangle overlay1, overlay2, overlay3, overlay4, overlay5, overlay7, overlay8, overlay9, overlay10, overlay11;
     @FXML private Arc overlay0, overlay6;
 
-    // The StackPane wrapping each cell — this is the container we draw gems into.
     @FXML private StackPane cellPane0, cellPane1, cellPane2, cellPane3, cellPane4, cellPane5;
     @FXML private StackPane cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11;
 
     private Label[] allCells;
     private Shape[] allOverlays;
 
-    /**
-     * Animation-synced view of whether each castle still holds its quan.
-     * Slot 0 = cell 0 (player 1's castle), slot 1 = cell 6 (player 2's castle).
-     *
-     * We deliberately do NOT read game.checkBigGemExistence() while rendering: the model
-     * resolves the whole turn (move + capture) up front, so its quan flag is already at the
-     * end-of-turn value before the animation replays. This local flag is flipped at the exact
-     * animation frame the castle is emptied, so the quan stays drawn until it is actually taken.
-     */
-
     private Game game;
     private GemRenderer gemRenderer;
+    private SquareHighlighter highlighter;
     private static final Duration STEP_DELAY = Duration.millis(700); // tweak speed here
+
     private int state = 1;
     private int selectedSquare = -1;
 
@@ -79,6 +68,8 @@ public class MainGameController extends BaseController {
             cellPane0, cellPane1, cellPane2, cellPane3, cellPane4, cellPane5,
             cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11
         };
+        gemRenderer = new GemRenderer(allCellPanes, allCells);
+        highlighter = new SquareHighlighter(allOverlays);
 
         for (int i = 0; i <= 11; i++) {
             allCells[i].setText("5");
@@ -87,10 +78,10 @@ public class MainGameController extends BaseController {
         scoreP1.setText("Score: 0");
         scoreP2.setText("Score: 0");
 
-        highlightAvailableSquareState1(game.getCurrentPlayer());
+        highlighter.highlightAvailableSquareState1(game.getAvailableSquares());
         initializePlayerData();
 
-        gemRenderer = new GemRenderer(allCellPanes, allCells);
+
         Platform.runLater(() -> gemRenderer.renderAllGems());
     }
 
@@ -117,24 +108,21 @@ public class MainGameController extends BaseController {
         int shapeID = convertStringToInt(fxid);
 
         if(state == 1){
-            if(checkState1(game.getCurrentPlayer(), shapeID)){
-                resetAllSquares();
-                highlightAvailableSquareState2(shapeID);
+            if(game.isValidSquareState1(shapeID)){
+                highlighter.resetAllSquares();
+                highlighter.highlightAvailableSquareState2(shapeID);
                 selectedSquare = shapeID;
                 state = 2;
             }
         }
         else if(state == 2){
-            if(checkState2(shapeID)){
+            if(game.isValidDirection(selectedSquare, shapeID)){
                 if(shapeID == selectedSquare){
                     state = 1;
-                    resetAllSquares();
-                    highlightAvailableSquareState1(game.getCurrentPlayer());
+                    highlighter.resetAllSquares();
+                    highlighter.highlightAvailableSquareState1(game.getAvailableSquares());
                 }else{
-                    int direction = shapeID - selectedSquare;
-                    if(direction == -11){
-                       direction = 1; //Case when the selectedSquare = 11 and the direction square is 0
-                    }
+                    int direction = game.getDirection(selectedSquare, shapeID);
                     onPlayerMove(selectedSquare,direction);
                 }
             }
@@ -143,7 +131,7 @@ public class MainGameController extends BaseController {
 
     public void onPlayerMove(int startingSquare, int direction){
         state = -1;
-        resetAllSquares();
+        highlighter.resetAllSquares();
         List<Pair<Integer, Integer>> moveSequence = game.proccessingTurn(startingSquare, direction);
         animateMoves(moveSequence, () -> {
             updateScoreUI();
@@ -158,7 +146,7 @@ public class MainGameController extends BaseController {
 
                 } else {
                     state = 1;
-                    highlightAvailableSquareState1(game.getCurrentPlayer());
+                    highlighter.highlightAvailableSquareState1(game.getAvailableSquares());
                 }
             });
         });
@@ -200,7 +188,7 @@ public class MainGameController extends BaseController {
                 }
                 // A castle only ever reaches 0 when it is captured. Flip the quan off at that
                 // exact frame (not earlier), so the big gem stays visible until it is actually taken.
-                if (isBigCell(cellIndex) && newValue == 0) {
+                if (game.isBigCell(cellIndex) && newValue == 0) {
                     gemRenderer.removeBigGem(cellIndex);
                 }
                 gemRenderer.renderGemsInCell(cellIndex, newValue);
@@ -215,95 +203,9 @@ public class MainGameController extends BaseController {
         scoreP2.setText("Score: " + game.getPlayerScore(1));
     }
 
-    private void setYellowSquare(Shape shape){
-        shape.setFill(Color.rgb(255, 255, 0, 0.15));
-        DropShadow glow = new DropShadow();
-        glow.setColor(Color.YELLOW);
-        glow.setRadius(50);
-        glow.setSpread(0.7);
-        shape.setEffect(glow);
-    }
-
-    private void setRedSquare(Shape shape){
-        shape.setFill(Color.rgb(255, 0, 0, 0.15));
-        DropShadow glow = new DropShadow();
-        glow.setColor(Color.RED);
-        glow.setRadius(50);
-        glow.setSpread(0.7);
-        shape.setEffect(glow);
-    }
-
-    private void resetSquare(Shape shape){
-        shape.setFill(Color.TRANSPARENT);
-        shape.setEffect(null);
-    }
-
-    public void resetAllSquares(){
-        for(Shape shape : allOverlays){
-            resetSquare(shape);
-        }
-    }
-
-    public boolean checkState1(int currentPlayer, int shapeID){
-        if(!hasGem(shapeID)){
-            return false;
-        }
-        if(currentPlayer == 0){
-            if(shapeID < 1 || shapeID > 5){
-                return false;
-            }
-        }else if(currentPlayer == 1){
-            if(shapeID < 7 || shapeID > 11){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean checkState2(int shapeID){
-        int LeftNeighbour = (selectedSquare + 1 + 12) % 12;
-        int RightNeighbour = (selectedSquare - 1 + 12) % 12;
-        if(shapeID == LeftNeighbour || shapeID == RightNeighbour || shapeID == selectedSquare){
-            return true;
-        }
-        return false;
-    }
-
-    public void highlightAvailableSquareState1(int currentPlayer){
-        if(currentPlayer == 0){
-            for(int i = 1; i<= 5;i++){
-                if(hasGem(i)){
-                    setYellowSquare(allOverlays[i]);
-                }
-            }
-        }else {
-            for(int i = 7; i<= 11;i++){
-                if(hasGem(i)){
-                    setYellowSquare(allOverlays[i]);
-                }
-            }
-        }
-    }
-
-    public void highlightAvailableSquareState2(int shapeID){
-        setRedSquare(allOverlays[shapeID]);
-        int LeftNeighbour = (shapeID + 1 + 12) % 12;
-        int RightNeighbour = (shapeID - 1 + 12) % 12;
-        setYellowSquare(allOverlays[LeftNeighbour]);
-        setYellowSquare(allOverlays[RightNeighbour]);
-    }
-
     public static int convertStringToInt(String str){
         str=str.replaceAll("[^0-9]", "");
         return Integer.parseInt(str);
-    }
-
-    public boolean hasGem(int shapeID){
-        String gemAmount = allCells[shapeID].getText();
-        if(Integer.parseInt(gemAmount) == 0){
-            return false;
-        }
-        return true;
     }
 
     public void postGameVisualEffect(Runnable onFinished){
@@ -339,13 +241,4 @@ public class MainGameController extends BaseController {
         timeline.setOnFinished(e -> onFinished.run());
         timeline.play();
     }
-
-    
-    // ---------------- Gem rendering ----------------
-
-    /** The two "castle" arc cells hold the immovable big gem (quan); all other cells hold small gems. */
-    private boolean isBigCell(int cellIndex) {
-        return cellIndex == 0 || cellIndex == 6;
-    }
-    
 }

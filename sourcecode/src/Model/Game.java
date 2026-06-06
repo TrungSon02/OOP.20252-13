@@ -119,6 +119,47 @@ public class Game {
         return players[playerIndex].getScore();
     }
 
+    public boolean isBigCell(int cellIndex) {
+        return cellIndex == 0 || cellIndex == 6;
+    }
+
+    public boolean isValidSquareState1(int squareID){
+        return getAvailableSquares().contains(squareID);
+    }
+
+    public boolean isValidDirection(int rootSquare, int directionSquare){
+        int leftNeighbour = (rootSquare + 1 + 12) % 12;
+        int rightNeighbour = (rootSquare - 1 + 12) % 12;
+        if(directionSquare == leftNeighbour || directionSquare == rightNeighbour || directionSquare == rootSquare){
+            return true;
+        }
+        return false;
+    }
+
+    public int getDirection(int rootSquare, int directionSquare){
+        int direction = directionSquare - rootSquare;
+        if(direction == -11){
+            direction = 1; //Case when the selectedSquare = 11 and the direction square is 0
+        }
+        return direction;
+    }
+
+    public List<Integer> getAvailableSquares(){
+        int start = 1, end = 5;
+        if(currentPlayer == 1){
+            start = 7;
+            end = 11;
+        }
+        
+        List<Integer> available = new ArrayList<>();
+        for(int i = start; i <= end; i++){
+            if(board.getTable()[i] > 0){
+                available.add(i);
+            }
+        }
+        return available;
+    }
+
     
     public List<Pair<Integer, Integer>> proccessingTurn(int startIndex, int direction){
         //Implement this method: Call moveGem -> Call handle capture
