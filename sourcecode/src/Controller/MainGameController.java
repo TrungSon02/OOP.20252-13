@@ -146,16 +146,16 @@ public class MainGameController extends BaseController {
         resetAllSquares();
         List<Pair<Integer, Integer>> moveSequence = game.proccessingTurn(startingSquare, direction);
         animateMoves(moveSequence, () -> {
-            updateScoreUI(game.getCurrentPlayer(), game.getPlayers()[game.getCurrentPlayer()].getScore());
+            updateScoreUI();
 
             List<Pair<Integer, Integer>> fillSequence = game.postTurnProcessing();
             animateMoves(fillSequence, () -> {
-                updateScoreUI(game.getCurrentPlayer(), game.getPlayers()[game.getCurrentPlayer()].getScore());
+                updateScoreUI();
                 if (game.isFinished()) {
                     postGameVisualEffect(() -> {
                         loadEndingScene();
                     });
-                    
+
                 } else {
                     state = 1;
                     highlightAvailableSquareState1(game.getCurrentPlayer());
@@ -210,12 +210,9 @@ public class MainGameController extends BaseController {
         timeline.play();
     }
 
-    public void updateScoreUI(int playerIndex, int score){
-            if (playerIndex == 0) {
-            scoreP1.setText("Score: " + score);
-        } else {
-            scoreP2.setText("Score: " + score);
-        }
+    public void updateScoreUI(){
+        scoreP1.setText("Score: " + game.getPlayerScore(0));
+        scoreP2.setText("Score: " + game.getPlayerScore(1));
     }
 
     private void setYellowSquare(Shape shape){
@@ -316,13 +313,13 @@ public class MainGameController extends BaseController {
             for(int i = 1; i <= 5; i++){
                 allCells[i].setText("0");
             }
-            updateScoreUI(0, game.getPlayers()[0].getScore());
+            updateScoreUI();
         }));
         timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(2), e -> {
             for(int i = 7; i <= 11; i++){
                 allCells[i].setText("0");
             }
-            updateScoreUI(1, game.getPlayers()[1].getScore());
+            updateScoreUI();
         }));
 
         

@@ -9,13 +9,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 public class GemRenderer {
-    private final StackPane[] allCellPanes;
-    private final Label[] allCells;
-    
-    private final Pane[] cellPiles;
-    private final boolean[] checkBigGemExistence = { true, true };
-    
-    private final CellRenderer[] cellRenderers;
+    private StackPane[] allCellPanes;
+    private Label[] allCells;
+    private Pane[] cellPiles;    
+    private CellRenderer[] cellRenderers;
 
     public GemRenderer(StackPane[] allCellPanes, Label[] allCells) {
         this.allCellPanes = allCellPanes;

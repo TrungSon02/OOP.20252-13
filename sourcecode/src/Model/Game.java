@@ -115,6 +115,10 @@ public class Game {
         return this.players;
     }
 
+    public int getPlayerScore(int playerIndex){
+        return players[playerIndex].getScore();
+    }
+
     
     public List<Pair<Integer, Integer>> proccessingTurn(int startIndex, int direction){
         //Implement this method: Call moveGem -> Call handle capture
