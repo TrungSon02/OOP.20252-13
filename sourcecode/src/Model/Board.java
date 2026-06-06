@@ -1,12 +1,14 @@
 package Model;
 
 import java.util.*;
+
 import javafx.util.Pair;
 
 
 public class Board {
     // FIX: Remove all non constant attributes (and related parts) except the first one, change the logic to table[] (treating all squares the same)
     private int[] table;     // 10 small squares (5 per player) indices 1-5 for player1, 7-11 for player2, 0 for player 1, 6 for player 2
+    private boolean[] BigGem = new boolean[2];
     private static final int TOTAL_SMALL_SQUARES = 10;
     private static final int P1_HOME = 0;
     private static final int P2_HOME = (TOTAL_SMALL_SQUARES + 2) / 2;
@@ -14,14 +16,26 @@ public class Board {
     private static final int CLOCKWISE = 1;
     private static final int COUNTER_CLOCKWISE = -1;
 
+
     //FIX: Init all square (including big ones to 5)
     public Board() {
         table = new int[TOTAL_SMALL_SQUARES + 2];
         for (int i = 0; i < TOTAL_SMALL_SQUARES + 2; i++) {
             table[i] = INITIAL_PAWNS;
         }
+        BigGem[0] = true;
+        BigGem[1] = true;
+    }
+
+    public boolean getBigGem(int id){
+        return BigGem[id];
     }
     
+    public void removeBigGem(int id){
+        
+        BigGem[id] = false;
+    }
+
     // Getter methods for accessing board state
     public int[] getTable() {
         return table;

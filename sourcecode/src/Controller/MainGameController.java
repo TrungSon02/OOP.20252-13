@@ -5,41 +5,49 @@ import java.util.List;
 import java.util.Objects;
 
 import Model.Game;
-import Model.Player;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.util.Pair;
-import javafx.util.Duration;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import javafx.util.Pair;
+
 
 public class MainGameController extends BaseController {
-
     @FXML private Label labelPlayer1, labelPlayer2;
 
     @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
-    @FXML private Label labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11;   
+    @FXML private Label labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11;
     @FXML private Label scoreP1, scoreP2;
     @FXML private ImageView avatarP1, avatarP2;
-    @FXML private Label[] allCells;
-    @FXML private Shape[] allOverlays;
+
     @FXML private Rectangle overlay1, overlay2, overlay3, overlay4, overlay5, overlay7, overlay8, overlay9, overlay10, overlay11;
     @FXML private Arc overlay0, overlay6;
 
+    @FXML private StackPane cellPane0, cellPane1, cellPane2, cellPane3, cellPane4, cellPane5;
+    @FXML private StackPane cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11;
+
+    private Label[] allCells;
+    private Shape[] allOverlays;
+
     private Game game;
+    private GemRenderer gemRenderer;
+    private SquareHighlighter highlighter;
     private static final Duration STEP_DELAY = Duration.millis(700); // tweak speed here
+
     private int state = 1;
     private int selectedSquare = -1;
 
@@ -47,7 +55,7 @@ public class MainGameController extends BaseController {
     public void initialize() {
         this.game = new Game();
         allCells = new Label[]{
-                labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5, 
+                labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5,
                 labelCell6, labelCell7, labelCell8, labelCell9, labelCell10, labelCell11
             };
 
@@ -55,17 +63,26 @@ public class MainGameController extends BaseController {
             overlay0, overlay1, overlay2, overlay3, overlay4, overlay5,
             overlay6, overlay7, overlay8, overlay9, overlay10, overlay11
         };
-        
+
+        StackPane[] allCellPanes = new StackPane[]{
+            cellPane0, cellPane1, cellPane2, cellPane3, cellPane4, cellPane5,
+            cellPane6, cellPane7, cellPane8, cellPane9, cellPane10, cellPane11
+        };
+        gemRenderer = new GemRenderer(allCellPanes, allCells);
+        highlighter = new SquareHighlighter(allOverlays);
 
         for (int i = 0; i <= 11; i++) {
             allCells[i].setText("5");
         }
-    
+
         scoreP1.setText("Score: 0");
         scoreP2.setText("Score: 0");
-        
-        highlightAvailableSquareState1(game.getCurrentPlayer());
+
+        highlighter.highlightAvailableSquareState1(game.getAvailableSquares());
         initializePlayerData();
+
+
+        Platform.runLater(() -> gemRenderer.renderAllGems());
     }
 
     private void initializePlayerData() {
@@ -73,11 +90,11 @@ public class MainGameController extends BaseController {
         labelPlayer2.setText("Player " + game.getPlayers()[1].getName());
         String avatarPathP1 = game.getPlayers()[0].getAvatar();
         String avatarPathP2 = game.getPlayers()[1].getAvatar();
-        
+
         try {
             Image imgPlayer1 = new Image(getClass().getResourceAsStream(avatarPathP1));
             Image imgPlayer2 = new Image(getClass().getResourceAsStream(avatarPathP2));
-            
+
             if (avatarP1 != null) avatarP1.setImage(imgPlayer1);
             if (avatarP2 != null) avatarP2.setImage(imgPlayer2);
         } catch (Exception e) {
@@ -86,62 +103,53 @@ public class MainGameController extends BaseController {
     }
 
     public void getInput(MouseEvent event){
-        //NAM
-        //Handle player input : Select a square -> then select direction
-        //NOTE: Check player's turn for the available squares
-        //After getting input, call onPlayerMove(square, direction)
-        //called whenever player clicks
-        //need to check the state of game
         Shape clickedShape = (Shape) event.getSource();
         String fxid = clickedShape.getId();
         int shapeID = convertStringToInt(fxid);
 
         if(state == 1){
-            if(checkState1(game.getCurrentPlayer(), shapeID)){
-                resetAllSquares();
-                highlightAvailableSquareState2(shapeID);
-                selectedSquare = shapeID; 
+            if(game.isValidSquareState1(shapeID)){
+                highlighter.resetAllSquares();
+                highlighter.highlightAvailableSquareState2(shapeID);
+                selectedSquare = shapeID;
                 state = 2;
             }
         }
         else if(state == 2){
-            if(checkState2(shapeID)){
+            if(game.isValidDirection(selectedSquare, shapeID)){
                 if(shapeID == selectedSquare){
                     state = 1;
-                    resetAllSquares();
-                    highlightAvailableSquareState1(game.getCurrentPlayer());
+                    highlighter.resetAllSquares();
+                    highlighter.highlightAvailableSquareState1(game.getAvailableSquares());
                 }else{
-                    int direction = shapeID - selectedSquare;
-                    if(direction == -11){
-                       direction = 1; //Case when the selectedSquare = 11 and the direction square is 0
-                    }
+                    int direction = game.getDirection(selectedSquare, shapeID);
                     onPlayerMove(selectedSquare,direction);
                 }
-            }   
+            }
         }
     }
 
     public void onPlayerMove(int startingSquare, int direction){
-        //IDea: Animation 1 finishes THEN update score and run animation 2 THEN hightlight
         state = -1;
-        resetAllSquares();
+        highlighter.resetAllSquares();
         List<Pair<Integer, Integer>> moveSequence = game.proccessingTurn(startingSquare, direction);
         animateMoves(moveSequence, () -> {
-            updateScoreUI(game.getCurrentPlayer(), game.getPlayers()[game.getCurrentPlayer()].getScore());
+            updateScoreUI();
 
             List<Pair<Integer, Integer>> fillSequence = game.postTurnProcessing();
             animateMoves(fillSequence, () -> {
+                updateScoreUI();
                 if (game.isFinished()) {
                     postGameVisualEffect(() -> {
                         loadEndingScene();
                     });
-                    
+
                 } else {
                     state = 1;
-                    highlightAvailableSquareState1(game.getCurrentPlayer());
+                    highlighter.highlightAvailableSquareState1(game.getAvailableSquares());
                 }
             });
-        });    
+        });
     }
 
     private void loadEndingScene() {
@@ -178,115 +186,26 @@ public class MainGameController extends BaseController {
                 if (allCells[cellIndex] != null) {  // this line is a safety check
                     allCells[cellIndex].setText(String.valueOf(newValue));// actual action here
                 }
+                // A castle only ever reaches 0 when it is captured. Flip the quan off at that
+                // exact frame (not earlier), so the big gem stays visible until it is actually taken.
+                if (game.isBigCell(cellIndex) && newValue == 0) {
+                    gemRenderer.removeBigGem(cellIndex);
+                }
+                gemRenderer.renderGemsInCell(cellIndex, newValue);
             }));
         }
         timeline.setOnFinished(e -> onFinished.run()); //When timeline finishes, run the code in -> {}
         timeline.play();
     }
-    
-    public void updateScoreUI(int playerIndex, int score){
-        //Hieu Anh
-        //TODO: Based on the param, Update the score Label for the given player
-            if (playerIndex == 0) {
-            scoreP1.setText("Score: " + score);
-        } else {
-            scoreP2.setText("Score: " + score);
-        }
-    }
 
-    private void setYellowSquare(Shape shape){
-        shape.setFill(Color.rgb(255, 255, 0, 0.15)); 
-        DropShadow glow = new DropShadow();
-        glow.setColor(Color.YELLOW);
-        glow.setRadius(50);
-        glow.setSpread(0.7);
-        shape.setEffect(glow);
-    }
-
-    private void setRedSquare(Shape shape){
-        shape.setFill(Color.rgb(255, 0, 0, 0.15)); 
-        DropShadow glow = new DropShadow();
-        glow.setColor(Color.RED);
-        glow.setRadius(50);
-        glow.setSpread(0.7);
-        shape.setEffect(glow);
-    }
-
-    private void resetSquare(Shape shape){
-        shape.setFill(Color.TRANSPARENT);
-        shape.setEffect(null);
-    }
-
-    public void resetAllSquares(){
-        for(Shape shape : allOverlays){
-            resetSquare(shape);
-        }
-    }
-
-    public boolean checkState1(int currentPlayer, int shapeID){
-        if(!hasGem(shapeID)){
-            return false;
-        }
-        if(currentPlayer == 0){
-            if(shapeID < 1 || shapeID > 5){
-                return false;
-            }
-        }else if(currentPlayer == 1){
-            if(shapeID < 7 || shapeID > 11){
-                return false;
-            }
-        }
-        return true;
-    }
-    public boolean checkState2(int shapeID){
-        int LeftNeighbour = (selectedSquare + 1 + 12) % 12;
-        int RightNeighbour = (selectedSquare - 1 + 12) % 12;
-        if(shapeID == LeftNeighbour || shapeID == RightNeighbour || shapeID == selectedSquare){
-            return true;
-        }
-        return false;
-    }
-
-
-    public void highlightAvailableSquareState1(int currentPlayer){
-        //NAM
-        //Check which player's turn to highlight the correct square
-        if(currentPlayer == 0){
-            for(int i = 1; i<= 5;i++){
-                if(hasGem(i)){
-                    setYellowSquare(allOverlays[i]);
-                }
-            }
-        }else {
-            for(int i = 7; i<= 11;i++){
-                if(hasGem(i)){
-                    setYellowSquare(allOverlays[i]);
-                }
-            }
-        }
-    }
-
-    public void highlightAvailableSquareState2(int shapeID){
-        setRedSquare(allOverlays[shapeID]);
-        int LeftNeighbour = (shapeID + 1 + 12) % 12;
-        int RightNeighbour = (shapeID - 1 + 12) % 12;
-        setYellowSquare(allOverlays[LeftNeighbour]);
-        setYellowSquare(allOverlays[RightNeighbour]);
-
+    public void updateScoreUI(){
+        scoreP1.setText("Score: " + game.getPlayerScore(0));
+        scoreP2.setText("Score: " + game.getPlayerScore(1));
     }
 
     public static int convertStringToInt(String str){
         str=str.replaceAll("[^0-9]", "");
-        
         return Integer.parseInt(str);
-    }
-
-    public boolean hasGem(int shapeID){
-        String gemAmount = allCells[shapeID].getText();
-        if(Integer.parseInt(gemAmount) == 0){
-            return false;
-        }
-        return true;
     }
 
     public void postGameVisualEffect(Runnable onFinished){
@@ -296,13 +215,13 @@ public class MainGameController extends BaseController {
             for(int i = 1; i <= 5; i++){
                 allCells[i].setText("0");
             }
-            updateScoreUI(0, game.getPlayers()[0].getScore());
+            updateScoreUI();
         }));
         timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(2), e -> {
             for(int i = 7; i <= 11; i++){
                 allCells[i].setText("0");
             }
-            updateScoreUI(1, game.getPlayers()[1].getScore());
+            updateScoreUI();
         }));
 
         
@@ -322,5 +241,4 @@ public class MainGameController extends BaseController {
         timeline.setOnFinished(e -> onFinished.run());
         timeline.play();
     }
-
 }

@@ -9,6 +9,8 @@ public class Player {
     static final String[] PLAYER_ADJECTIVES = {"Hungry", "Brave", "Cunning", "Swift", "Almighty", "Wise", "Fierce", "Smart", "Quick"};
     static final String[] PLAYER_NOUN = {"Hippo", "Giraffe", "Elephant", "Lion","Tiger", "Bear", "Wolf", "Fox", "Eagle", "Shark","Sloth","Turtle","Pattrick","Banana","Chongus",};
     
+
+    
     private String generatePlayerNames(){
         Random random = new Random();
         String tmp = PLAYER_ADJECTIVES[random.nextInt(PLAYER_ADJECTIVES.length)] + " " + PLAYER_NOUN[random.nextInt(PLAYER_NOUN.length)];
