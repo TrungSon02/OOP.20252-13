@@ -162,8 +162,13 @@ public class MainGameController extends BaseController {
             scene.getStylesheets().add(css);
 
             EndingController ending = loader.getController();
-            ending.displayWinner(game.getWinner().getName(), game.getWinner().getAvatar());
-
+            if(game.getWinner() != null){
+                ending.displayWinner(game.getWinner().getName(), game.getWinner().getAvatar());
+            }
+            else{
+                ending.displayWinner("It's a Tie!", null); 
+            }
+            
             currentStage.hide();
             currentStage.setScene(scene);
             currentStage.setFullScreen(true);
@@ -231,12 +236,20 @@ public class MainGameController extends BaseController {
             final double on  = 3 + i * 1.0; 
             final double off = 3.5 + i * 1.0; 
             timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(on), e -> {
-                Label winnerScore = game.getWinnerId() == 0 ? scoreP1 : scoreP2;
-                winnerScore.setTextFill(Color.GOLD);
+                if(game.getWinnerId() == 0){
+                    scoreP1.setTextFill(Color.GOLD);
+                }
+                else if(game.getWinnerId() == 1){
+                    scoreP2.setTextFill(Color.GOLD);
+                }
             }));
             timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(off), e -> {
-                Label winnerScore = game.getWinnerId() == 0 ? scoreP1 : scoreP2;
-                winnerScore.setTextFill(Color.WHITE);
+                if(game.getWinnerId() == 0){
+                    scoreP1.setTextFill(Color.WHITE);
+                }
+                else if(game.getWinnerId() == 1){
+                    scoreP2.setTextFill(Color.WHITE);
+                }
             }));
         }
 

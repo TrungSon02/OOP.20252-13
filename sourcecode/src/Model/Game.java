@@ -80,19 +80,14 @@ public class Game {
         } else if (score1 > score0) {
             this.winnerId = 1;
         } else {
-            this.winnerId = 99;
+            this.winnerId = -1;
         }
     }
 
     public Player getWinner(){
         if (this.winnerId == 0) return players[0];
         if (this.winnerId == 1) return players[1];
-
-        //TODO: Remove this part so that it will instead raise an exception
-        Player tiePlayer = new Player(0);
-        tiePlayer.resetScore();
-        tiePlayer.updateScore(players[0].getScore());
-        return tiePlayer;
+        return null;
     }
 
     public int getWinnerId() {
