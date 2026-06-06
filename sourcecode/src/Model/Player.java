@@ -19,9 +19,9 @@ public class Player {
         this.name = generatePlayerNames();
         this.score = 0;
         if(PlayerID == 0){
-            this.avatar = "/image/avatar/Pattrick_" + (new Random().nextInt(5)+1) + ".jpg";
+            this.avatar = "/asset/image/avatar/Pattrick_" + (new Random().nextInt(5)+1) + ".jpg";
         }else{
-            this.avatar = "/image/avatar/Pattrick_" + (new Random().nextInt(4)+6) + ".jpg";
+            this.avatar = "/asset/image/avatar/Pattrick_" + (new Random().nextInt(4)+6) + ".jpg";
         }
     }
 

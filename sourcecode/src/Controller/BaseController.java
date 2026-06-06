@@ -26,7 +26,7 @@ public class BaseController {
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);
 
-            String css = Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm();
+            String css = Objects.requireNonNull(getClass().getResource("/asset/css/application.css")).toExternalForm();
             scene.getStylesheets().add(css);
 
             stage.hide();

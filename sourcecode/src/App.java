@@ -14,9 +14,9 @@ public class App extends Application {
         loadFont();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
         Scene scene = new Scene(root, Color.LIGHTBLUE);
-        scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/asset/css/application.css").toExternalForm());
 
-        Image icon = new Image("image/layout/logo.png");
+        Image icon = new Image("asset/image/layout/logo.png");
         stage.getIcons().add(icon);
         stage.setFullScreen(true);
 
@@ -25,11 +25,11 @@ public class App extends Application {
     }
 
     private void loadFont(){
-        Font.loadFont(getClass().getResourceAsStream("/font/Xirod.otf"), 36);
-        Font.loadFont(getClass().getResourceAsStream("/font/HN-Artukge-Script.ttf"), 36);
-        Font.loadFont(getClass().getResourceAsStream("/font/Super Beatpop.ttf"), 36);
-        Font.loadFont(getClass().getResourceAsStream("/font/SuperMaples.ttf"), 36);
-        //Font.getFamilies().forEach(System.out::println);
+        Font.loadFont(getClass().getResourceAsStream("/asset/font/Xirod.otf"), 36);
+        Font.loadFont(getClass().getResourceAsStream("/asset/font/HN-Artukge-Script.ttf"), 36);
+        Font.loadFont(getClass().getResourceAsStream("/asset/font/Super Beatpop.ttf"), 36);
+        Font.loadFont(getClass().getResourceAsStream("/asset/font/SuperMaples.ttf"), 36);
+        //asset/font.getFamilies().forEach(System.out::println);
         
     }
 

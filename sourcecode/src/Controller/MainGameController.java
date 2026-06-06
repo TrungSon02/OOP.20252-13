@@ -158,7 +158,7 @@ public class MainGameController extends BaseController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ending.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            String css = Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm();
+            String css = Objects.requireNonNull(getClass().getResource("/asset/css/application.css")).toExternalForm();
             scene.getStylesheets().add(css);
 
             EndingController ending = loader.getController();

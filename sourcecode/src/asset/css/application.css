@@ -1,18 +1,18 @@
 .menu-background {
-    -fx-background-image: url("/image/background/menu_background.png");
+    -fx-background-image: url("/asset/image/background/menu_background.png");
     -fx-background-size: cover;
     -fx-background-position: center;
 }
 
 .game-background {
-    -fx-background-image: url("/image/background/main_game_background.png");
+    -fx-background-image: url("/asset/image/background/main_game_background.png");
     -fx-background-size: cover;
     -fx-background-position: center;
 }
 
 .menu-button {
     -fx-background-color: transparent;
-    -fx-background-image: url("/image/layout/wood_button.png");
+    -fx-background-image: url("/asset/image/layout/wood_button.png");
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
     -fx-border-width: 0;
@@ -26,7 +26,7 @@
 
 .exit-small-button {
     -fx-background-color: transparent;
-    -fx-background-image: url("/image/menu_icon/Home.png");
+    -fx-background-image: url("/asset/image/menu_icon/Home.png");
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
     -fx-border-width: 0;
@@ -37,7 +37,7 @@
 
 .audio-button {
     -fx-background-color: transparent;
-    -fx-background-image: url("/image/menu_icon/audio.png");
+    -fx-background-image: url("/asset/image/menu_icon/audio.png");
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
     -fx-border-width: 0;
@@ -48,7 +48,7 @@
 
 .music-button {
     -fx-background-color: transparent;
-    -fx-background-image: url("/image/menu_icon/music.png");
+    -fx-background-image: url("/asset/image/menu_icon/music.png");
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
     -fx-border-width: 0;
@@ -59,7 +59,7 @@
 
 .green-play-again-button {
     -fx-background-color: transparent;
-    -fx-background-image: url("/image/menu_icon/green_play_again.png");
+    -fx-background-image: url("/asset/image/menu_icon/green_play_again.png");
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
     -fx-border-width: 0;
@@ -70,7 +70,7 @@
 
 .green-home-button {
     -fx-background-color: transparent;
-    -fx-background-image: url("/image/menu_icon/green_home.png");
+    -fx-background-image: url("/asset/image/menu_icon/green_home.png");
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
     -fx-border-width: 0;
@@ -115,7 +115,7 @@
 }
 
 .instruction-container {
-    -fx-background-image: url("/image/layout/wood_surface.png");
+    -fx-background-image: url("/asset/image/layout/wood_surface.png");
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
     -fx-background-radius: 10;
@@ -145,7 +145,7 @@
     -fx-font-family: "Xirod";
     -fx-font-size: 24px;
     -fx-text-fill: #FFF5E0;
-    -fx-background-image: url("/image/layout/scoreboard.png");
+    -fx-background-image: url("/asset/image/layout/scoreboard.png");
     -fx-background-size: 100% 100%;
     -fx-background-repeat: no-repeat;
     -fx-padding: 20 100 20 40;
@@ -176,7 +176,7 @@
 }
 
 .ending-container {
-    -fx-background-image: url("/image/layout/wood_frame.png");
+    -fx-background-image: url("/asset/image/layout/wood_frame.png");
     -fx-background-size: cover;
     -fx-background-repeat: no-repeat;
     -fx-background-radius: 10;
