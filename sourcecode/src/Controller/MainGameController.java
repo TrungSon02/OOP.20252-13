@@ -9,6 +9,8 @@ import Model.Game;
 import View.BaseGem;
 import View.BigGem;
 import View.SmallGem;
+import Model.Player;
+import Model.NoWinnerException;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -195,9 +197,15 @@ public class MainGameController extends BaseController {
             Scene scene = new Scene(root);
             String css = Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm();
             scene.getStylesheets().add(css);
-
             EndingController ending = loader.getController();
-            ending.displayWinner(game.getWinner().getName(), game.getWinner().getAvatar());
+
+            try {
+                Player winner = game.getWinner();
+                ending.displayWinner(winner.getName(), winner.getAvatar());
+            } catch (NoWinnerException e) {
+                System.out.println(e.getMessage());
+                ending.displayWinner("It's a Tie!", null); 
+            }
 
             currentStage.hide();
             currentStage.setScene(scene);

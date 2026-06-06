@@ -84,15 +84,12 @@ public class Game {
         }
     }
 
-    public Player getWinner(){
+    public Player getWinner() throws NoWinnerException {
         if (this.winnerId == 0) return players[0];
         if (this.winnerId == 1) return players[1];
 
         //TODO: Remove this part so that it will instead raise an exception
-        Player tiePlayer = new Player(0);
-        tiePlayer.resetScore();
-        tiePlayer.updateScore(players[0].getScore());
-        return tiePlayer;
+        throw new NoWinnerException("The match ended in a Tie!");
     }
 
     public int getWinnerId() {

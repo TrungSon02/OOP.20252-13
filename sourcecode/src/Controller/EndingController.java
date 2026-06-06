@@ -19,16 +19,25 @@ public class EndingController extends BaseController{
 
     public void displayWinner(String name, String avatarPath) {
         if (winnerNameLabel != null) {
-            winnerNameLabel.setText("Player " + name + " wins!");
+            if ("It's a Tie!".equals(name)) {
+                winnerNameLabel.setText(name);
+            } else {
+                winnerNameLabel.setText("Player " + name + " wins!");
+            }
         }
 
-        try {
-            if (winnerAvatarView != null && avatarPath != null) {
-                Image avatarImage = new Image(getClass().getResourceAsStream(avatarPath));
-                winnerAvatarView.setImage(avatarImage);
+        if (winnerAvatarView != null) {
+            if (avatarPath != null && !avatarPath.trim().isEmpty()) {
+                try {
+                    Image avatarImage = new Image(getClass().getResourceAsStream(avatarPath));
+                    winnerAvatarView.setImage(avatarImage);
+                    winnerAvatarView.setVisible(true); 
+                } catch (Exception e) {
+                    System.err.println("Error: Failed to load winner avatar from " + avatarPath);
+                }
+            } else {
+                winnerAvatarView.setVisible(false);
             }
-        } catch (Exception e) {
-            System.err.println("Error: Failed to load winner avatar from " + avatarPath);
         }
     }
 }
