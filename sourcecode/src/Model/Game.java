@@ -148,15 +148,15 @@ public class Game {
     }
 
     private void determineWinner(){
-        for (int i = 1; i <= 5; i++) {
-            players[0].updateScore(board.getSquareValue(i));
-        }
-        for (int i = 7; i <= 11; i++) {
-            players[1].updateScore(board.getSquareValue(i));
-        }
-
         int score0 = players[0].getScore();
         int score1 = players[1].getScore();
+        
+        for (int i = 1; i <= 5; i++) {
+            score0 += board.getSquareValue(i);
+        }
+        for (int i = 7; i <= 11; i++) {
+            score1 += board.getSquareValue(i);
+        }
 
         if (score0 > score1) {
             this.winnerId = 0;
@@ -164,6 +164,17 @@ public class Game {
             this.winnerId = 1;
         } else {
             this.winnerId = -1;
+        }
+    }
+
+    public void collectRemainingGem(int playerID){
+        int start = 1, end = 5;
+        if(playerID == 1){
+            start = 7;
+            end = 11;
+        }
+        for (int i = start; i <= end; i++) {
+            players[playerID].updateScore(board.getSquareValue(i));
         }
     }
 

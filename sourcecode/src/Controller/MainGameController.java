@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 
 import Model.Game;
+import View.GemRenderer;
+import View.SquareHighlighter;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -220,6 +222,7 @@ public class MainGameController extends BaseController {
                 allCellLabels[i].setText("0");
                 gemRenderer.renderGemsInCell(i, 0);
             }
+            game.collectRemainingGem(0);
             updateScoreUI();
         }));
         timeline.getKeyFrames().add(new KeyFrame(STEP_DELAY.multiply(2), e -> {
@@ -227,6 +230,7 @@ public class MainGameController extends BaseController {
                 allCellLabels[i].setText("0");
                 gemRenderer.renderGemsInCell(i, 0);
             }
+            game.collectRemainingGem(1);
             updateScoreUI();
         }));
 

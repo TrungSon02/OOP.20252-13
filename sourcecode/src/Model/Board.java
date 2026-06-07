@@ -86,12 +86,8 @@ public class Board {
         }
     }
     
-    public boolean clearSquare(int square){
-        if (square < 0 || square > 11){
-            return false;
-        }
+    public void clearSquare(int square){
         table[square] = 0;
-        return true;
     }
 
     public boolean checkEnding() {

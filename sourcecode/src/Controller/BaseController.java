@@ -14,17 +14,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 public class BaseController {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
-
     public void loadScene(String fxmlPath, ActionEvent event){
         //PHUC
         //Get a String input param (the path to a fxml file). Load the scene + Load the css
         try{
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
-            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root);
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
 
             String css = Objects.requireNonNull(getClass().getResource("/asset/css/application.css")).toExternalForm();
             scene.getStylesheets().add(css);

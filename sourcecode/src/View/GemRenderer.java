@@ -1,8 +1,5 @@
-package Controller;
+package View;
 
-import View.CastleCellRenderer;
-import View.CellRenderer;
-import View.SmallCellRenderer;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
