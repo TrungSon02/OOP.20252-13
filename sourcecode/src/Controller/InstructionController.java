@@ -1,16 +1,23 @@
 package Controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
-public class InstructionController extends BaseController {
+public class InstructionController{
 
     @FXML private Label instructionLabel;
+    private final SceneNavigator navigator = SceneNavigator.getInstance();
 
     @FXML // Overriding JavaFX's interface
     public void initialize() {
         // PHUC
         setInstructionContent(); 
+    }
+
+    @FXML
+    public void goHome(ActionEvent event) {
+        navigator.goHome(event);
     }
 
     private void setInstructionContent() {

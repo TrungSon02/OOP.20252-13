@@ -12,7 +12,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         loadFont();
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/ending.fxml"));
         Scene scene = new Scene(root, Color.LIGHTBLUE);
         scene.getStylesheets().add(getClass().getResource("/asset/css/application.css").toExternalForm());
 

@@ -1,13 +1,25 @@
 package Controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class EndingController extends BaseController{
+public class EndingController{
     @FXML private Label winnerNameLabel;
     @FXML private ImageView winnerAvatarView;
+    private final SceneNavigator navigator = SceneNavigator.getInstance();
+
+    @FXML
+    public void goHome(ActionEvent event) {
+        navigator.goHome(event);
+    }
+
+    @FXML
+    public void goPlay(ActionEvent event) {
+        navigator.goPlay(event);
+    }
 
     public void displayWinner(String name, String avatarPath) {
         if (winnerNameLabel != null) {

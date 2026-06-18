@@ -28,7 +28,7 @@ import javafx.util.Duration;
 import javafx.util.Pair;
 
 
-public class MainGameController extends BaseController {
+public class MainGameController{
     @FXML private Label labelPlayer1, labelPlayer2;
 
     @FXML private Label labelCell0, labelCell1, labelCell2, labelCell3, labelCell4, labelCell5;
@@ -258,5 +258,10 @@ public class MainGameController extends BaseController {
 
         timeline.setOnFinished(e -> onFinished.run());
         timeline.play();
+    }
+
+    @FXML
+    public void goHome(javafx.event.ActionEvent event) {
+        Controller.SceneNavigator.getInstance().goHome(event);
     }
 }
