@@ -52,7 +52,7 @@ public class Game {
     private void switchPlayer() {
         this.currentPlayer = 1 - this.currentPlayer;
     }
-    
+
     public List<Pair<Integer, Integer>> proccessingTurn(int startIndex, int direction){
         //Implement this method: Call moveGem -> Call handle capture
         //return: A complete sequence of moves from the start to the end (combine the existing moves in moveGem with new captured moves)

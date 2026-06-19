@@ -14,6 +14,7 @@ import java.util.Objects;
 
 public class SceneNavigator {
     private static final SceneNavigator instance = new SceneNavigator();
+    private Stage stage;
 
     private SceneNavigator() {}
 
@@ -24,7 +25,10 @@ public class SceneNavigator {
     public void loadScene(String fxmlPath, ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            if(stage == null){
+                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            }
+            
             Scene scene = new Scene(root);
 
             String css = Objects.requireNonNull(getClass().getResource("/asset/css/application.css")).toExternalForm();
@@ -66,4 +70,31 @@ public class SceneNavigator {
             System.exit(0);
         }
     }
+
+    public void loadEndingScene(int winnerID, String winnerName, String winnerAvatar){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ending.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            String css = Objects.requireNonNull(getClass().getResource("/asset/css/application.css")).toExternalForm();
+            scene.getStylesheets().add(css);
+
+            EndingController ending = loader.getController();
+            if(winnerID != -1){
+                ending.displayWinner(winnerName, winnerAvatar);
+            }
+            else{
+                ending.displayWinner("It's a Tie!", null); 
+            }
+            
+            stage.hide();
+            stage.setScene(scene);
+            stage.setFullScreen(true);
+            stage.setFullScreenExitHint("");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -1,19 +1,14 @@
 package Controller;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
-
 import Model.Game;
 import View.GemRenderer;
 import View.SquareHighlighter;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
@@ -48,6 +42,7 @@ public class MainGameController{
     private Game game;
     private GemRenderer gemRenderer;
     private SquareHighlighter highlighter;
+    private final SceneNavigator navigator = SceneNavigator.getInstance();
     private static final Duration STEP_DELAY = Duration.millis(700); // tweak speed here
 
     private int state = 1;
@@ -143,7 +138,10 @@ public class MainGameController{
                 updateScoreUI();
                 if (game.isFinished()) {
                     postGameVisualEffect(() -> {
-                        loadEndingScene();
+                        int winnerID = game.getWinnerId();
+                        String name = winnerID != -1 ? game.getPlayerName(winnerID) : "It's a Tie!";
+                        String avatar = winnerID != -1 ? game.getPlayerAvatar(winnerID) : null;
+                        navigator.loadEndingScene(winnerID, name, avatar);
                     });
 
                 } else {
@@ -152,34 +150,6 @@ public class MainGameController{
                 }
             });
         });
-    }
-
-    private void loadEndingScene() {
-        try {
-            Stage currentStage = (Stage) scoreP0.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ending.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            String css = Objects.requireNonNull(getClass().getResource("/asset/css/application.css")).toExternalForm();
-            scene.getStylesheets().add(css);
-
-            EndingController ending = loader.getController();
-            int winnerID = game.getWinnerId();
-            if(winnerID != -1){
-                ending.displayWinner(game.getPlayerName(winnerID), game.getPlayerAvatar(winnerID));
-            }
-            else{
-                ending.displayWinner("It's a Tie!", null); 
-            }
-            
-            currentStage.hide();
-            currentStage.setScene(scene);
-            currentStage.setFullScreen(true);
-            currentStage.setFullScreenExitHint("");
-            currentStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void animateMoves(List<Pair<Integer, Integer>> moves, Runnable onFinished) {
@@ -261,7 +231,7 @@ public class MainGameController{
     }
 
     @FXML
-    public void goHome(javafx.event.ActionEvent event) {
-        Controller.SceneNavigator.getInstance().goHome(event);
+    public void goHome(ActionEvent event) {
+        navigator.goHome(event);
     }
 }
