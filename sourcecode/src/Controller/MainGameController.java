@@ -69,7 +69,7 @@ public class MainGameController{
         highlighter = new SquareHighlighter(allOverlays);
 
         for (int i = 0; i <= 11; i++) {
-            allCellLabels[i].setText("5");
+            allCellLabels[i].setText(String.valueOf(game.getSquareValue(i)));
         }
 
         scoreP0.setText("Score: 0");

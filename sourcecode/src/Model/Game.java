@@ -29,6 +29,10 @@ public class Game {
         return this.currentPlayer;
     }
 
+    public int getSquareValue(int id){
+        return board.getSquareValue(id);
+    }
+
     public boolean isFinished() {
         return this.isFinished;
     }
