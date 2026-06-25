@@ -72,17 +72,14 @@ public class MainGameController{
             allCellLabels[i].setText(String.valueOf(game.getSquareValue(i)));
         }
 
-        scoreP0.setText("Score: 0");
-        scoreP1.setText("Score: 0");
-
         highlighter.highlightAvailableSquareState1(game.getAvailableSquares());
         initializePlayerData();
-
 
         Platform.runLater(() -> gemRenderer.renderAllGems());
     }
 
     private void initializePlayerData() {
+        updateScoreUI();
         labelPlayer1.setText("Player " + game.getPlayerName(0));
         labelPlayer2.setText("Player " + game.getPlayerName(1));
         String avatarPathP0 = game.getPlayerAvatar(0);
