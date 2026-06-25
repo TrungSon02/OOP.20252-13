@@ -59,31 +59,18 @@ public class Board {
         return moveSequence;
     }
 
-    public int checkEmpty() {
-        boolean player0Empty = true;
-        for (int i = 1; i < P2_HOME; i++) {
+    public boolean checkEmpty(int playerID) {
+        int start = 1, end = 5;
+        if(playerID == 1){
+            start = 7;
+            end = 11;
+        }
+        for (int i = start; i <= end; i++) {
             if (table[i] > 0) {
-                player0Empty = false;
-                break;
+                return false;
             }
         }
-        
-        // Check player 1's squares
-        boolean player1Empty = true;
-        for (int i = P2_HOME + 1; i < TOTAL_SMALL_SQUARES + 2; i++) {
-            if (table[i] > 0) {
-                player1Empty = false;
-                break;
-            }
-        }
-        
-        if (player0Empty){
-            return 0;
-        } else if (player1Empty){
-            return 1;
-        } else {
-            return -1;
-        }
+        return true;
     }
     
     public void clearSquare(int square){
@@ -94,7 +81,7 @@ public class Board {
         return this.table[0] == 0 && this.table[6] == 0;
     }
     
-    public boolean fillGem(int player) {
+    public void fillGem(int player) {
         int startIndex;
         if (player == 0) {
             startIndex = P1_HOME + 1;
@@ -106,6 +93,5 @@ public class Board {
         for (int i = startIndex; i < startIndex + 5; i++) {
             table[i] = 1;
         }
-        return true;
     }
 }

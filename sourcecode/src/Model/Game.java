@@ -78,13 +78,14 @@ public class Game {
             determineWinner();
             return fillMoves; 
         }
-        int emptyPlayer = board.checkEmpty();
-        if (emptyPlayer != -1) {
-            board.fillGem(emptyPlayer);
-            players[emptyPlayer].updateScore(-5);
-            int startIndex = (emptyPlayer == 0) ? 1 : 7;
-            for (int i = startIndex; i < startIndex + 5; i++) {
-                fillMoves.add(new Pair<>(i, 1));
+        for(int playerID = 0; playerID <= 1; playerID++){
+            if(board.checkEmpty(playerID)){
+                board.fillGem(playerID);
+                players[playerID].updateScore(-5);
+                int startIndex = (playerID == 0) ? 1 : 7;
+                for (int i = startIndex; i < startIndex + 5; i++) {
+                    fillMoves.add(new Pair<>(i, 1));
+                }
             }
         }
         switchPlayer();
