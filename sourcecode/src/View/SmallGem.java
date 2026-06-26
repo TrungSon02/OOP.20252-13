@@ -3,8 +3,9 @@ package View;
 import java.util.Random;
 
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
-public class SmallGem extends BaseGem {
+public class SmallGem extends Circle {
 
     public static final double RADIUS = 7.0;
     public static final int VALUE = 1;
@@ -16,6 +17,8 @@ public class SmallGem extends BaseGem {
     private static final Random RNG = new Random();
 
     public SmallGem() {
-        super(RADIUS, COLORS[RNG.nextInt(COLORS.length)], VALUE);
+        super(RADIUS, COLORS[RNG.nextInt(COLORS.length)]);
+        setStroke(Color.color(0, 0, 0, 0.35));
+        setStrokeWidth(1);
     }
 }
